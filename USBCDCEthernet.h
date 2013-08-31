@@ -300,7 +300,7 @@ typedef struct
 {
     IOBufferMemoryDescriptor	*pipeOutMDP;
     UInt8			*pipeOutBuffer;
-    struct mbuf			*m;
+    mbuf_t		 m;
 } pipeOutBuffers;
 
     // Globals
@@ -417,8 +417,8 @@ private:
     bool			initDevice(UInt8 numConfigs);
     bool			getFunctionalDescriptors(void);
     bool			createNetworkInterface(void);
-    UInt32			outputPacket(struct mbuf *pkt, void *param);
-    bool			USBTransmitPacket(struct mbuf *packet);
+    UInt32			outputPacket(mbuf_t pkt, void *param);
+    bool			USBTransmitPacket(mbuf_t packet);
     bool			USBSetMulticastFilter(IOEthernetAddress *addrs, UInt32 count);
     bool			USBSetPacketFilter(void);
     IOReturn			clearPipeStall(IOUSBPipe *thePipe);
@@ -426,6 +426,10 @@ private:
     static void 		timerFired(OSObject *owner, IOTimerEventSource *sender);
     void			timeoutOccurred(IOTimerEventSource *timer);
 
+    IOReturn  ReadRegister(UInt16 reg, UInt16 size, UInt8* buffer);
+    IOReturn  WriteRegister(UInt16 reg, UInt16 size, UInt8* buffer);
+    IOReturn  Write1Register(UInt16 reg, UInt8 value);
+  
 public:
 
     IOUSBDevice			*fpDevice;

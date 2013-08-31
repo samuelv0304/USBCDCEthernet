@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
@@ -35,17 +35,29 @@
 			<key>IOProviderClass</key>
 			<string>IOUSBDevice</string>
 			<key>idProduct</key>
-			<integer>0</integer>
+			<integer>38656</integer>
 			<key>idVendor</key>
-			<integer>0</integer>
+			<integer>4070</integer>
 		</dict>
 	</dict>
 	<key>OSBundleLibraries</key>
 	<dict>
 		<key>com.apple.iokit.IONetworkingFamily</key>
-		<string>1.1</string>
+		<string>2.1</string>
 		<key>com.apple.iokit.IOUSBFamily</key>
-		<string>1.8</string>
+		<string>5.1</string>
+		<key>com.apple.kpi.bsd</key>
+		<string>11.4.2</string>
+		<key>com.apple.kpi.iokit</key>
+		<string>11.4.2</string>
+		<key>com.apple.kpi.libkern</key>
+		<string>11.4.2</string>
+		<key>com.apple.kpi.mach</key>
+		<string>8.0.0</string>
+		<key>com.apple.kpi.unsupported</key>
+		<string>8.0.0</string>
 	</dict>
+	<key>OSBundleRequired</key>
+	<string>Network-Root</string>
 </dict>
 </plist>

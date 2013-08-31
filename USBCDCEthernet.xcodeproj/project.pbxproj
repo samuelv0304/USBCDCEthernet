@@ -10,6 +10,7 @@
 		3EC7EED808D730E2004D38EB /* USBCDCEthernet.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A224C3EFF42367911CA2CB7 /* USBCDCEthernet.h */; };
 		3EC7EEDA08D730E2004D38EB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		3EC7EEDC08D730E2004D38EB /* USBCDCEthernet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A224C3FFF42367911CA2CB7 /* USBCDCEthernet.cpp */; settings = {ATTRIBUTES = (); }; };
+		7E88FD9317D209850093B2EF /* DM9601.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E88FD9217D209850093B2EF /* DM9601.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,6 +19,7 @@
 		1A224C3FFF42367911CA2CB7 /* USBCDCEthernet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = USBCDCEthernet.cpp; sourceTree = "<group>"; };
 		3EC7EEE308D730E2004D38EB /* USBCDCEthernet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = USBCDCEthernet.plist; sourceTree = "<group>"; };
 		3EC7EEE408D730E2004D38EB /* USBCDCEthernet.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = USBCDCEthernet.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E88FD9217D209850093B2EF /* DM9601.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DM9601.h; sourceTree = "<group>"; };
 		F59C308D02C2AF4001000102 /* Kernel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kernel.framework; path = /System/Library/Frameworks/Kernel.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
@@ -63,6 +65,7 @@
 		247142CAFF3F8F9811CA285C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				7E88FD9217D209850093B2EF /* DM9601.h */,
 				1A224C3EFF42367911CA2CB7 /* USBCDCEthernet.h */,
 				1A224C3FFF42367911CA2CB7 /* USBCDCEthernet.cpp */,
 			);
@@ -77,6 +80,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3EC7EED808D730E2004D38EB /* USBCDCEthernet.h in Headers */,
+				7E88FD9317D209850093B2EF /* DM9601.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +116,11 @@
 			isa = PBXProject;
 			buildConfigurationList = 3EEA305108D71E49002CBB49 /* Build configuration list for PBXProject "USBCDCEthernet" */;
 			compatibilityVersion = "Xcode 2.4";
+			developmentRegion = English;
 			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
 			mainGroup = 089C166AFE841209C02AAC07 /* AppleUSBCDCEthernet */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -190,13 +198,15 @@
 		3EC7EEE108D730E2004D38EB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_TREAT_NONCONFORMANT_CODE_ERRORS_AS_WARNINGS = YES;
-				INFOPLIST_FILE = "Info-USBCDCEthernet__Upgraded_.plist";
+				INFOPLIST_FILE = USBCDCEthernet.plist;
 				INSTALL_PATH = "$(SYSTEM_LIBRARY_DIR)/Extensions";
 				KERNEL_MODULE = YES;
 				MODULE_IOKIT = YES;
@@ -212,14 +222,12 @@
 		3EC7EEE208D730E2004D38EB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_TREAT_NONCONFORMANT_CODE_ERRORS_AS_WARNINGS = YES;
-				INFOPLIST_FILE = "Info-USBCDCEthernet__Upgraded_.plist";
+				INFOPLIST_FILE = USBCDCEthernet.plist;
 				INSTALL_PATH = "$(SYSTEM_LIBRARY_DIR)/Extensions";
 				KERNEL_MODULE = YES;
 				MODULE_IOKIT = YES;
