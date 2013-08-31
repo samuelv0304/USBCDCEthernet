@@ -2473,7 +2473,7 @@ bool com_apple_driver_dts_USBCDCEthernet::USBSetPacketFilter()
     if (fPacketFilter & kPACKET_TYPE_ALL_MULTICAST)
       control |= RCRAllMulticast;
     else
-      control &= ~RCRPromiscuous;
+      control &= ~RCRAllMulticast;
     
     rc = Write1Register(RegRCR, control);
     if (rc != kIOReturnSuccess)
