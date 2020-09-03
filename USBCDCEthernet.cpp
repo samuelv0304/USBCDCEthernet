@@ -2,14 +2,14 @@
  * Copyright (c) 2003 Apple Computer, Inc. All rights reserved.
  *
  * @APPLE_LICENSE_HEADER_START@
- * 
+ *
  * This file contains Original Code and/or Modifications of Original Code
  * as defined in and that are subject to the Apple Public Source License
  * Version 2.0 (the 'License'). You may not use this file except in
  * compliance with the License. Please obtain a copy of the License at
  * http://www.opensource.apple.com/apsl/ and read it before using this
  * file.
- * 
+ *
  * The Original Code and all software distributed under the License are
  * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
  * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
@@ -17,63 +17,63 @@
  * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
  * Please see the License for the specific language governing rights and
  * limitations under the License.
- * 
+ *
  * @APPLE_LICENSE_HEADER_END@
  */
 /*
-    File:		USBCDCEthernet.cpp
-	
-    Description:	This is a sample USB Communication Device Class (CDC) driver, Ethernet model.
-                        Note that this sample has not been tested against any actual hardware since there
-                        are very few CDC Ethernet devices currently in existence. 
-                        
-                        This sample requires Mac OS X 10.1 and later. If built on a version prior to 
-                        Mac OS X 10.2, a compiler warning "warning: ANSI C++ forbids data member `ip_opts'
-                        with same name as enclosing class" will be issued. This warning can be ignored.
-                        
-    Copyright:		© Copyright 1998-2002 Apple Computer, Inc. All rights reserved.
-	
-    Disclaimer:		IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc.
-                        ("Apple") in consideration of your agreement to the following terms, and your
-                        use, installation, modification or redistribution of this Apple software
-                        constitutes acceptance of these terms.  If you do not agree with these terms,
-                        please do not use, install, modify or redistribute this Apple software.
-
-                        In consideration of your agreement to abide by the following terms, and subject
-                        to these terms, Apple grants you a personal, non-exclusive license, under Apple’s
-                        copyrights in this original Apple software (the "Apple Software"), to use,
-                        reproduce, modify and redistribute the Apple Software, with or without
-                        modifications, in source and/or binary forms; provided that if you redistribute
-                        the Apple Software in its entirety and without modifications, you must retain
-                        this notice and the following text and disclaimers in all such redistributions of
-                        the Apple Software.  Neither the name, trademarks, service marks or logos of
-                        Apple Computer, Inc. may be used to endorse or promote products derived from the
-                        Apple Software without specific prior written permission from Apple.  Except as
-                        expressly stated in this notice, no other rights or licenses, express or implied,
-                        are granted by Apple herein, including but not limited to any patent rights that
-                        may be infringed by your derivative works or by other works in which the Apple
-                        Software may be incorporated.
-
-                        The Apple Software is provided by Apple on an "AS IS" basis.  APPLE MAKES NO
-                        WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE IMPLIED
-                        WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-                        PURPOSE, REGARDING THE APPLE SOFTWARE OR ITS USE AND OPERATION ALONE OR IN
-                        COMBINATION WITH YOUR PRODUCTS.
-
-                        IN NO EVENT SHALL APPLE BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL OR
-                        CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-                        GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-                        ARISING IN ANY WAY OUT OF THE USE, REPRODUCTION, MODIFICATION AND/OR DISTRIBUTION
-                        OF THE APPLE SOFTWARE, HOWEVER CAUSED AND WHETHER UNDER THEORY OF CONTRACT, TORT
-                        (INCLUDING NEGLIGENCE), STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN
-                        ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-				
-	Change History (most recent first):
-        
-            <1>	 	07/30/02	New sample.
-            <2>		12/01/02	Fixed a couple of bugs and added an output buffer pool
-        
-*/
+ File:		USBCDCEthernet.cpp
+ 
+ Description:	This is a sample USB Communication Device Class (CDC) driver, Ethernet model.
+ Note that this sample has not been tested against any actual hardware since there
+ are very few CDC Ethernet devices currently in existence.
+ 
+ This sample requires Mac OS X 10.1 and later. If built on a version prior to
+ Mac OS X 10.2, a compiler warning "warning: ANSI C++ forbids data member `ip_opts'
+ with same name as enclosing class" will be issued. This warning can be ignored.
+ 
+ Copyright:		© Copyright 1998-2002 Apple Computer, Inc. All rights reserved.
+ 
+ Disclaimer:		IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc.
+ ("Apple") in consideration of your agreement to the following terms, and your
+ use, installation, modification or redistribution of this Apple software
+ constitutes acceptance of these terms.  If you do not agree with these terms,
+ please do not use, install, modify or redistribute this Apple software.
+ 
+ In consideration of your agreement to abide by the following terms, and subject
+ to these terms, Apple grants you a personal, non-exclusive license, under Apple’s
+ copyrights in this original Apple software (the "Apple Software"), to use,
+ reproduce, modify and redistribute the Apple Software, with or without
+ modifications, in source and/or binary forms; provided that if you redistribute
+ the Apple Software in its entirety and without modifications, you must retain
+ this notice and the following text and disclaimers in all such redistributions of
+ the Apple Software.  Neither the name, trademarks, service marks or logos of
+ Apple Computer, Inc. may be used to endorse or promote products derived from the
+ Apple Software without specific prior written permission from Apple.  Except as
+ expressly stated in this notice, no other rights or licenses, express or implied,
+ are granted by Apple herein, including but not limited to any patent rights that
+ may be infringed by your derivative works or by other works in which the Apple
+ Software may be incorporated.
+ 
+ The Apple Software is provided by Apple on an "AS IS" basis.  APPLE MAKES NO
+ WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE IMPLIED
+ WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ PURPOSE, REGARDING THE APPLE SOFTWARE OR ITS USE AND OPERATION ALONE OR IN
+ COMBINATION WITH YOUR PRODUCTS.
+ 
+ IN NO EVENT SHALL APPLE BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL OR
+ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ ARISING IN ANY WAY OUT OF THE USE, REPRODUCTION, MODIFICATION AND/OR DISTRIBUTION
+ OF THE APPLE SOFTWARE, HOWEVER CAUSED AND WHETHER UNDER THEORY OF CONTRACT, TORT
+ (INCLUDING NEGLIGENCE), STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN
+ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ Change History (most recent first):
+ 
+ <1>	 	07/30/02	New sample.
+ <2>		12/01/02	Fixed a couple of bugs and added an output buffer pool
+ 
+ */
 
 #include "USBCDCEthernet.h"
 #include "DM9601.h"
@@ -81,7 +81,7 @@
 #define MIN_BAUD (50 << 1)
 
 static globals	g;	// Instantiate the globals
-    
+
 static struct MediumTable
 {
     UInt32	type;
@@ -100,19 +100,19 @@ mediumTable[] =
 
 #define	numStats	13
 UInt16	stats[13] = {	kXMIT_OK_REQ,
-                        kRCV_OK_REQ,
-                        kXMIT_ERROR_REQ,
-                        kRCV_ERROR_REQ, 
-                        kRCV_CRC_ERROR_REQ,
-                        kRCV_ERROR_ALIGNMENT_REQ,
-                        kXMIT_ONE_COLLISION_REQ,
-                        kXMIT_MORE_COLLISIONS_REQ,
-                        kXMIT_DEFERRED_REQ,
-                        kXMIT_MAX_COLLISION_REQ,
-                        kRCV_OVERRUN_REQ,
-                        kXMIT_TIMES_CARRIER_LOST_REQ,
-                        kXMIT_LATE_COLLISIONS_REQ
-                    };
+    kRCV_OK_REQ,
+    kXMIT_ERROR_REQ,
+    kRCV_ERROR_REQ,
+    kRCV_CRC_ERROR_REQ,
+    kRCV_ERROR_ALIGNMENT_REQ,
+    kXMIT_ONE_COLLISION_REQ,
+    kXMIT_MORE_COLLISIONS_REQ,
+    kXMIT_DEFERRED_REQ,
+    kXMIT_MAX_COLLISION_REQ,
+    kRCV_OVERRUN_REQ,
+    kXMIT_TIMES_CARRIER_LOST_REQ,
+    kXMIT_LATE_COLLISIONS_REQ
+};
 
 #define super IOEthernetController
 
@@ -135,7 +135,7 @@ static void AllocateEventLog(UInt32 size)
 {
     if (g.evLogBuf)
         return;
-
+    
     g.evLogFlag = 0;            // assume insufficient memory
     g.evLogBuf = (UInt8*)IOMalloc(size);
     if (!g.evLogBuf)
@@ -143,18 +143,18 @@ static void AllocateEventLog(UInt32 size)
         kprintf("com_apple_driver_dts_USBCDCEthernet evLog allocation failed ");
         return;
     }
-
+    
     bzero(g.evLogBuf, size);
     g.evLogBufp	= g.evLogBuf;
     g.evLogBufe	= g.evLogBufp + kEvLogSize - 0x20; // ??? overran buffer?
     g.evLogFlag  = 0xFEEDBEEF;	// continuous wraparound
-//	g.evLogFlag  = 'step';		// stop at each ELG
-//	g.evLogFlag  = 0x0333;		// any nonzero - don't wrap - stop logging at buffer end
-
+    //	g.evLogFlag  = 'step';		// stop at each ELG
+    //	g.evLogFlag  = 0x0333;		// any nonzero - don't wrap - stop logging at buffer end
+    
     IOLog("AllocateEventLog - &globals=%8x buffer=%8x", (unsigned int)&g, (unsigned int)g.evLogBuf);
-
+    
     return;
-	
+    
 }/* end AllocateEventLog */
 
 /****************************************************************************************************/
@@ -173,38 +173,38 @@ static void EvLog(UInt32 a, UInt32 b, UInt32 ascii, char* str)
 {
     register UInt32	*lp;           // Long pointer
     mach_timespec_t	time;
-
+    
     if (g.evLogFlag == 0)
         return;
-
+    
     IOGetTime(&time);
-
+    
     lp = (UInt32*)g.evLogBufp;
     g.evLogBufp += 0x10;
-
+    
     if (g.evLogBufp >= g.evLogBufe)       // handle buffer wrap around if any
-    {    
+    {
         g.evLogBufp  = g.evLogBuf;
         if (g.evLogFlag != 0xFEEDBEEF)    // make 0xFEEDBEEF a symbolic ???
             g.evLogFlag = 0;                // stop tracing if wrap undesired
     }
-
-        // compose interrupt level with 3 byte time stamp:
-
+    
+    // compose interrupt level with 3 byte time stamp:
+    
     *lp++ = (g.intLevel << 24) | ((time.tv_nsec >> 10) & 0x003FFFFF);   // ~ 1 microsec resolution
     *lp++ = a;
     *lp++ = b;
     *lp   = ascii;
-
+    
     if(g.evLogFlag == 'step')
-    {	
+    {
         static char	code[ 5 ] = {0,0,0,0,0};
         *(UInt32*)&code = ascii;
         IOLog("%8x com_apple_driver_dts_USBCDCEthernet: %8x %8x %s\n", time.tv_nsec>>10, (unsigned int)a, (unsigned int)b, code);
     }
-
+    
     return;
-	
+    
 }/* end EvLog */
 #endif // USE_ELG
 
@@ -220,15 +220,15 @@ static void EvLog(UInt32 a, UInt32 b, UInt32 ascii, char* str)
 //		Desc:		Converts to ascii. 
 //
 /****************************************************************************************************/
- 
+
 static UInt8 Asciify(UInt8 i)
 {
-
+    
     i &= 0xF;
     if (i < 10)
         return('0' + i);
     else return(55  + i);
-	
+    
 }/* end Asciify */
 
 #define dumplen		32		// Set this to the number of bytes to dump and the rest should work out correct
@@ -255,13 +255,13 @@ static void USBLogData(UInt8 Dir, UInt32 Count, char *buf)
     UInt8	wlen, i, Aspnt, Hxpnt;
     UInt8	wchr;
     char	LocBuf[buflen+1];
-
+    
     for (i=0; i<=buflen; i++)
     {
         LocBuf[i] = 0x20;
     }
     LocBuf[i] = 0x00;
-	
+    
     if (Dir == kUSBIn)
     {
         IOLog("com_apple_driver_dts_USBCDCEthernet: USBLogData - Read Complete, size = %8x\n", (unsigned int)Count);
@@ -274,16 +274,16 @@ static void USBLogData(UInt8 Dir, UInt32 Count, char *buf)
             {
                 IOLog("com_apple_driver_dts_USBCDCEthernet: USBLogData - Other, size = %8x\n", (unsigned int)Count);
             }
-        }			
+        }
     }
-
+    
     if (Count > dumplen)
     {
         wlen = dumplen;
     } else {
         wlen = Count;
     }
-	
+    
     if (wlen > 0)
     {
         Aspnt = Asciistart;
@@ -307,7 +307,7 @@ static void USBLogData(UInt8 Dir, UInt32 Count, char *buf)
     } else {
         IOLog("com_apple_driver_dts_USBCDCEthernet: USBLogData - No data, Count=0\n");
     }
-	
+    
 }/* end USBLogData */
 #endif // LOG_DATA
 
@@ -326,65 +326,65 @@ static void USBLogData(UInt8 Dir, UInt32 Count, char *buf)
 
 void com_apple_driver_dts_USBCDCEthernet::commReadComplete(void *obj, void *param, IOReturn rc, UInt32 remaining)
 {
-  com_apple_driver_dts_USBCDCEthernet	*me = (com_apple_driver_dts_USBCDCEthernet*)obj;
-  IOReturn		ior;
-  UInt8		notif, status;
-  
-  ELG(rc, 0, 'cRC+', "com_apple_driver_dts_USBCDCEthernet::commReadComplete");
-  
-  if (rc == kIOReturnSuccess)	// If operation returned ok
-  {
-    ELG(0, remaining, 'cRC+', "com_apple_driver_dts_USBCDCEthernet::commReadComplete succeed");
-    status = me->fCommPipeBuffer[0];
-    if (status & 0x40)
+    com_apple_driver_dts_USBCDCEthernet	*me = (com_apple_driver_dts_USBCDCEthernet*)obj;
+    IOReturn		ior;
+    UInt8		notif, status;
+    
+    ELG(rc, 0, 'cRC+', "com_apple_driver_dts_USBCDCEthernet::commReadComplete");
+    
+    if (rc == kIOReturnSuccess)	// If operation returned ok
     {
-      me->fLinkStatus = 1;
-      me->setLinkStatus(0);
+        ELG(0, remaining, 'cRC+', "com_apple_driver_dts_USBCDCEthernet::commReadComplete succeed");
+        status = me->fCommPipeBuffer[0];
+        if (status & 0x40)
+        {
+            me->fLinkStatus = 1;
+            me->setLinkStatus(0);
+        }
+        else
+        {
+            me->fLinkStatus = 0;
+            me->setLinkStatus(1);
+        }
+        notif = me->fCommPipeBuffer[1];
+        if (!(notif & kResponse_Available))
+        {
+            UInt8 control = 0;
+            
+            control |= RCRDiscardLong | RCRDiscardCRC | RCRRXEnable;
+            me->Write1Register(RegRCR, control); // 0x31
+            
+            control &= ~RCRRXEnable;
+            me->Write1Register(RegRCR, control); // 0x30
+            
+            control |= RCRRXEnable;
+            me->Write1Register(RegRCR, control); // 0x31
+        }
     }
-    else
+    else if (rc == kIOReturnAborted)
     {
-      me->fLinkStatus = 0;
-      me->setLinkStatus(1);
+        return;
     }
-    notif = me->fCommPipeBuffer[1];
-    if (!(notif & kResponse_Available))
+    
+    // Queue the next read, only if not aborted
+    ior = me->fCommPipe->Read(me->fCommPipeMDP, &me->fCommCompletionInfo, NULL);
+    if (ior != kIOReturnSuccess)
     {
-      UInt8 control = 0;
-      
-      control |= RCRDiscardLong | RCRDiscardCRC | RCRRXEnable;
-      me->Write1Register(RegRCR, control); // 0x31
-      
-      control &= ~RCRRXEnable;
-      me->Write1Register(RegRCR, control); // 0x30
-      
-      control |= RCRRXEnable;
-      me->Write1Register(RegRCR, control); // 0x31
+        ELG(0, ior, 'cRF-', "com_apple_driver_dts_USBCDCEthernet::commReadComplete - Failed to queue next read");
+        if (ior == kIOUSBPipeStalled)
+        {
+            me->fCommPipe->Reset();
+            ior = me->fCommPipe->Read(me->fCommPipeMDP, &me->fCommCompletionInfo, NULL);
+            if (ior != kIOReturnSuccess)
+            {
+                ELG(0, ior, 'cR--', "com_apple_driver_dts_USBCDCEthernet::commReadComplete - Failed, read dead");
+                me->fCommDead = true;
+            }
+        }
     }
-  }
-  else if (rc == kIOReturnAborted)
-  {
-    return;
-  }
-  
-  // Queue the next read, only if not aborted
-  ior = me->fCommPipe->Read(me->fCommPipeMDP, &me->fCommCompletionInfo, NULL);
-  if (ior != kIOReturnSuccess)
-  {
-    ELG(0, ior, 'cRF-', "com_apple_driver_dts_USBCDCEthernet::commReadComplete - Failed to queue next read");
-    if (ior == kIOUSBPipeStalled)
-    {
-      me->fCommPipe->Reset();
-      ior = me->fCommPipe->Read(me->fCommPipeMDP, &me->fCommCompletionInfo, NULL);
-      if (ior != kIOReturnSuccess)
-      {
-        ELG(0, ior, 'cR--', "com_apple_driver_dts_USBCDCEthernet::commReadComplete - Failed, read dead");
-        me->fCommDead = true;
-      }
-    }
-  }
-  
-  return ;
-	
+    
+    return ;
+    
 }/* end commReadComplete */
 
 /****************************************************************************************************/
@@ -406,18 +406,18 @@ void com_apple_driver_dts_USBCDCEthernet::dataReadComplete(void *obj, void *para
 {
     com_apple_driver_dts_USBCDCEthernet	*me = (com_apple_driver_dts_USBCDCEthernet*)obj;
     IOReturn		ior;
-
+    
     ELG(rc, remaining, 'dRC-', "com_apple_driver_dts_USBCDCEthernet::dataReadComplete");
     if (rc == kIOReturnSuccess)	// If operation returned ok
     {
         ELG(me->fMax_Block_Size, remaining, 'dRC+', "com_apple_driver_dts_USBCDCEthernet::dataReadComplete - Moving the incoming bytes up the stack");
-		
+        
         LogData(kUSBIn, (me->fMax_Block_Size - remaining), me->fPipeInBuffer);
-	
-            // Move the incoming bytes up the stack
-
+        
+        // Move the incoming bytes up the stack
+        
         me->receivePacket(me->fPipeInBuffer, me->fMax_Block_Size - remaining);
-	
+        
     } else {
         ELG(0, rc, 'dRc-', "com_apple_driver_dts_USBCDCEthernet::dataReadComplete - Read completion io err");
         if (rc != kIOReturnAborted)
@@ -430,8 +430,8 @@ void com_apple_driver_dts_USBCDCEthernet::dataReadComplete(void *obj, void *para
         }
     }
     
-        // Queue the next read, only if not aborted
-	
+    // Queue the next read, only if not aborted
+    
     if (rc != kIOReturnAborted)
     {
         ior = me->fInPipe->Read(me->fPipeInMDP, &me->fReadCompletionInfo, NULL);
@@ -450,9 +450,9 @@ void com_apple_driver_dts_USBCDCEthernet::dataReadComplete(void *obj, void *para
             }
         }
     }
-
+    
     return;
-	
+    
 }/* end dataReadComplete */
 
 /****************************************************************************************************/
@@ -479,11 +479,11 @@ void com_apple_driver_dts_USBCDCEthernet::dataWriteComplete(void *obj, void *par
     UInt32		numbufs = 0;
 #endif /* LDEBUG */
     UInt32		poolIndx;
-
+    
     poolIndx = (uintptr_t)param;
     
     if (rc == kIOReturnSuccess)						// If operation returned ok
-    {	
+    {
         ELG(rc, poolIndx, 'dWC+', "com_apple_driver_dts_USBCDCEthernet::dataWriteComplete");
         if (me->fPipeOutBuff[poolIndx].m != NULL)			// Null means zero length write
         {
@@ -499,7 +499,7 @@ void com_apple_driver_dts_USBCDCEthernet::dataWriteComplete(void *obj, void *par
             
             me->freePacket(me->fPipeOutBuff[poolIndx].m);		// Free the mbuf
             me->fPipeOutBuff[poolIndx].m = NULL;
-        
+            
             if ((pktLen % me->fOutPacketSize) == 0)			// If it was a multiple of max packet size then we need to do a zero length write
             {
                 ELG(rc, pktLen, 'dWCz', "com_apple_driver_dts_USBCDCEthernet::dataWriteComplete - writing zero length packet");
@@ -510,7 +510,7 @@ void com_apple_driver_dts_USBCDCEthernet::dataWriteComplete(void *obj, void *par
         }
     } else {
         ELG(rc, poolIndx, 'dWe-', "com_apple_driver_dts_USBCDCEthernet::dataWriteComplete - IO err");
-
+        
         if (me->fPipeOutBuff[poolIndx].m != NULL)
         {
             me->freePacket(me->fPipeOutBuff[poolIndx].m);		// Free the mbuf anyway
@@ -525,9 +525,9 @@ void com_apple_driver_dts_USBCDCEthernet::dataWriteComplete(void *obj, void *par
             }
         }
     }
-        
+    
     return;
-	
+    
 }/* end dataWriteComplete */
 
 /****************************************************************************************************/
@@ -549,7 +549,7 @@ void com_apple_driver_dts_USBCDCEthernet::merWriteComplete(void *obj, void *para
 {
     IOUSBDevRequest	*MER = (IOUSBDevRequest*)param;
     UInt16		dataLen;
-	
+    
     if (MER)
     {
         if (rc == kIOReturnSuccess)
@@ -558,7 +558,7 @@ void com_apple_driver_dts_USBCDCEthernet::merWriteComplete(void *obj, void *para
         } else {
             ELG(MER->bRequest, rc, 'mWC-', "com_apple_driver_dts_USBCDCEthernet::merWriteComplete - io err");
         }
-		
+        
         dataLen = MER->wLength;
         ELG(0, dataLen, 'mWC ', "com_apple_driver_dts_USBCDCEthernet::merWriteComplete - data length");
         if ((dataLen != 0) && (MER->pData))
@@ -566,7 +566,7 @@ void com_apple_driver_dts_USBCDCEthernet::merWriteComplete(void *obj, void *para
             IOFree(MER->pData, dataLen);
         }
         IOFree(MER, sizeof(IOUSBDevRequest));
-		
+        
     } else {
         if (rc == kIOReturnSuccess)
         {
@@ -575,9 +575,9 @@ void com_apple_driver_dts_USBCDCEthernet::merWriteComplete(void *obj, void *para
             ELG(0, rc, 'rWr-', "com_apple_driver_dts_USBCDCEthernet::merWriteComplete (request unknown) - io err");
         }
     }
-	
+    
     return;
-	
+    
 }/* end merWriteComplete */
 
 /****************************************************************************************************/
@@ -600,7 +600,7 @@ void com_apple_driver_dts_USBCDCEthernet::statsWriteComplete(void *obj, void *pa
     com_apple_driver_dts_USBCDCEthernet	*me = (com_apple_driver_dts_USBCDCEthernet *)obj;
     IOUSBDevRequest	*STREQ = (IOUSBDevRequest*)param;
     UInt16		currStat;
-	
+    
     if (STREQ)
     {
         if (rc == kIOReturnSuccess)
@@ -622,7 +622,7 @@ void com_apple_driver_dts_USBCDCEthernet::statsWriteComplete(void *obj, void *pa
                     me->fpNetStats->inputErrors = USBToHostLong(me->fStatValue);
                     break;
                 case kRCV_CRC_ERROR_REQ:
-                    me->fpEtherStats->dot3StatsEntry.fcsErrors = USBToHostLong(me->fStatValue); 
+                    me->fpEtherStats->dot3StatsEntry.fcsErrors = USBToHostLong(me->fStatValue);
                     break;
                 case kRCV_ERROR_ALIGNMENT_REQ:
                     me->fpEtherStats->dot3StatsEntry.alignmentErrors = USBToHostLong(me->fStatValue);
@@ -652,11 +652,11 @@ void com_apple_driver_dts_USBCDCEthernet::statsWriteComplete(void *obj, void *pa
                     ELG(currStat, rc, 'sWI-', "com_apple_driver_dts_USBCDCEthernet::statsWriteComplete - Invalid stats code");
                     break;
             }
-
+            
         } else {
             ELG(STREQ->bRequest, rc, 'sWC-', "com_apple_driver_dts_USBCDCEthernet::statsWriteComplete - io err");
         }
-		
+        
         IOFree(STREQ, sizeof(IOUSBDevRequest));
     } else {
         if (rc == kIOReturnSuccess)
@@ -666,11 +666,11 @@ void com_apple_driver_dts_USBCDCEthernet::statsWriteComplete(void *obj, void *pa
             ELG(0, rc, 'sWr-', "com_apple_driver_dts_USBCDCEthernet::statsWriteComplete (request unknown) - io err");
         }
     }
-	
+    
     me->fStatValue = 0;
     me->fStatInProgress = false;
     return;
-	
+    
 }/* end statsWriteComplete */
 
 /****************************************************************************************************/
@@ -688,16 +688,16 @@ void com_apple_driver_dts_USBCDCEthernet::statsWriteComplete(void *obj, void *pa
 bool com_apple_driver_dts_USBCDCEthernet::init(OSDictionary *properties)
 {
     UInt32	i;
-
+    
     g.evLogBufp = NULL;
-        
+    
 #if USE_ELG
     AllocateEventLog(kEvLogSize);
     ELG(&g, g.evLogBufp, 'USBM', "com_apple_driver_dts_USBCDCEthernet::init - event logging set up.");
-
+    
     waitForService(resourceMatching("kdp"));
 #endif /* USE_ELG */
-
+    
     ELG(0, 0, 'init', "com_apple_driver_dts_USBCDCEthernet::init");
     
     if (super::init(properties) == false)
@@ -706,7 +706,7 @@ bool com_apple_driver_dts_USBCDCEthernet::init(OSDictionary *properties)
         return false;
     }
     
-        // Set some defaults
+    // Set some defaults
     
     fMax_Block_Size = 0x1000;
     fCurrStat = 0;
@@ -721,9 +721,9 @@ bool com_apple_driver_dts_USBCDCEthernet::init(OSDictionary *properties)
         fPipeOutBuff[i].pipeOutBuffer = NULL;
         fPipeOutBuff[i].m = NULL;
     }
-
+    
     return true;
-
+    
 }/* end init*/
 
 /****************************************************************************************************/
@@ -742,16 +742,16 @@ bool com_apple_driver_dts_USBCDCEthernet::init(OSDictionary *properties)
 bool com_apple_driver_dts_USBCDCEthernet::start(IOService *provider)
 {
     UInt8	configs;	// number of device configurations
-
+    
     ELG(this, provider, 'strt', "com_apple_driver_dts_USBCDCEthernet::start - this, provider.");
     if(!super::start(provider))
     {
         ALERT(0, 0, 'SS--', "com_apple_driver_dts_USBCDCEthernet::start - start super failed");
         return false;
     }
-
-	// Get my USB device provider - the device
-
+    
+    // Get my USB device provider - the device
+    
     fpDevice = OSDynamicCast(IOUSBDevice, provider);
     if(!fpDevice)
     {
@@ -759,9 +759,9 @@ bool com_apple_driver_dts_USBCDCEthernet::start(IOService *provider)
         stop(provider);
         return false;
     }
-
-	// Let's see if we have any configurations to play with
-		
+    
+    // Let's see if we have any configurations to play with
+    
     configs = fpDevice->GetNumConfigurations();
     if (configs < 1)
     {
@@ -769,16 +769,16 @@ bool com_apple_driver_dts_USBCDCEthernet::start(IOService *provider)
         stop(provider);
         return false;
     }
-	
-	// Now take control of the device and configure it
-		
+    
+    // Now take control of the device and configure it
+    
     if (!fpDevice->open(this))
     {
         ALERT(0, 0, 'Opn-', "com_apple_driver_dts_USBCDCEthernet::start - unable to open device");
         stop(provider);
         return false;
     }
-	
+    
     if (!configureDevice(configs))
     {
         ALERT(0, 0, 'Nub-', "com_apple_driver_dts_USBCDCEthernet::start - failed");
@@ -791,7 +791,7 @@ bool com_apple_driver_dts_USBCDCEthernet::start(IOService *provider)
     ELG(0, 0, 'Nub+', "com_apple_driver_dts_USBCDCEthernet::start - successful");
     
     return true;
-    	
+    
 }/* end start */
 
 /****************************************************************************************************/
@@ -808,17 +808,17 @@ bool com_apple_driver_dts_USBCDCEthernet::start(IOService *provider)
 
 void com_apple_driver_dts_USBCDCEthernet::free()
 {
-
+    
     ELG(0, 0, 'free', "com_apple_driver_dts_USBCDCEthernet::free");
-	
+    
 #if USE_ELG
     if (g.evLogBuf)
-    	IOFree(g.evLogBuf, kEvLogSize);
+        IOFree(g.evLogBuf, kEvLogSize);
 #endif /* USE_ELG */
-
+    
     super::free();
     return;
-	
+    
 }/* end free */
 
 /****************************************************************************************************/
@@ -843,16 +843,16 @@ void com_apple_driver_dts_USBCDCEthernet::stop(IOService *provider)
         fNetworkInterface->release();
         fNetworkInterface = NULL;
     }
-
     
-    if (fCommInterface)	
+    
+    if (fCommInterface)
     {
         fCommInterface->close(this);
         fCommInterface->release();
-        fCommInterface = NULL;	
+        fCommInterface = NULL;
     }
-	
-    if (fDataInterface)	
+    
+    if (fDataInterface)
     {
         // disable RX
         UInt8 control;
@@ -861,11 +861,11 @@ void com_apple_driver_dts_USBCDCEthernet::stop(IOService *provider)
             control &= ~RCRRXEnable;
             Write1Register(RegRCR, control);
         }
-        fDataInterface->close(this);	
+        fDataInterface->close(this);
         fDataInterface->release();
-        fDataInterface = NULL;	
+        fDataInterface = NULL;
     }
-
+    
     if (fpDevice)
     {
         fpDevice->close(this);
@@ -881,7 +881,7 @@ void com_apple_driver_dts_USBCDCEthernet::stop(IOService *provider)
     super::stop(provider);
     
     return;
-	
+    
 }/* end stop */
 
 /****************************************************************************************************/
@@ -904,19 +904,19 @@ bool com_apple_driver_dts_USBCDCEthernet::configureDevice(UInt8 numConfigs)
     UInt16				numends = 0;
     UInt16				alt;
     bool				goodCall;
-       
+    
     ELG(0, numConfigs, 'cDev', "com_apple_driver_dts_USBCDCEthernet::configureDevice");
-    	
-        // Initialize and "configure" the device
-        
+    
+    // Initialize and "configure" the device
+    
     if (!initDevice(numConfigs))
     {
         ELG(0, 0, 'cDi-', "com_apple_driver_dts_USBCDCEthernet::configureDevice - initDevice failed");
         return false;
     }
-
-        // Get the Comm. Class interface
-
+    
+    // Get the Comm. Class interface
+    
     req.bInterfaceClass	= kUSBCompositeClass;
     req.bInterfaceSubClass = kUSBCompositeSubClass;
     req.bInterfaceProtocol = 0;
@@ -928,7 +928,7 @@ bool com_apple_driver_dts_USBCDCEthernet::configureDevice(UInt8 numConfigs)
         ELG(0, 0, 'FIC-', "com_apple_driver_dts_USBCDCEthernet::configureDevice - Finding the first CDC interface failed");
         return false;
     }
-  
+    
 #if 1
     UInt8 registerValue = 0;
     if (ReadRegister(RegNSR, sizeof(registerValue), &registerValue) != kIOReturnSuccess)
@@ -940,7 +940,7 @@ bool com_apple_driver_dts_USBCDCEthernet::configureDevice(UInt8 numConfigs)
         return false;
     }
 #endif
-
+    
     goodCall = fCommInterface->open(this);
     if (!goodCall)
     {
@@ -951,14 +951,14 @@ bool com_apple_driver_dts_USBCDCEthernet::configureDevice(UInt8 numConfigs)
     
     fCommInterfaceNumber = fCommInterface->GetInterfaceNumber();
     
-        // Now get the Data Class interface
-        
+    // Now get the Data Class interface
+    
     req.bInterfaceClass = kUSBCompositeClass;
     req.bInterfaceSubClass = kUSBCompositeSubClass;
     req.bInterfaceProtocol = 0;
     req.bAlternateSetting = 0;
     
-    fDataInterface = fpDevice->FindNextInterface(NULL, &req);    
+    fDataInterface = fpDevice->FindNextInterface(NULL, &req);
     if (fDataInterface)
     {
         numends = fDataInterface->GetNumEndpoints();
@@ -1003,7 +1003,7 @@ bool com_apple_driver_dts_USBCDCEthernet::configureDevice(UInt8 numConfigs)
     } else {
         ELG(0, 0, 'cDr-', "com_apple_driver_dts_USBCDCEthernet::configureDevice - FindNextInterface failed");
     }
-
+    
     if (numends < 2)
     {
         ELG(0, 0, 'cDs-', "com_apple_driver_dts_USBCDCEthernet::configureDevice - Finding a Data Class interface failed");
@@ -1011,24 +1011,24 @@ bool com_apple_driver_dts_USBCDCEthernet::configureDevice(UInt8 numConfigs)
         fCommInterface = NULL;
         return false;
     } else {
-    
+        
         fCommInterface->retain();
         fDataInterface->retain();
-
-      // Found hqrwqre address
-      IOReturn ior;
-      
-      ELG(0, 0, 'gHdA', "com_apple_driver_dts_USBCDCEthernet::configureDevice - Getting Hardware Address");
-      
-      ior = ReadRegister(RegPAR, sizeof(fEaddr), fEaddr);
-      if (ior != kIOReturnSuccess)
-      {
-        ELG(0, ior, 'RR--', "com_apple_driver_dts_USBCDCEthernet::configureDevice - Getting Hardware Address failed");
-        return false;
-      }
-      
-            // Found both so now let's publish the interface
-	
+        
+        // Found hqrwqre address
+        IOReturn ior;
+        
+        ELG(0, 0, 'gHdA', "com_apple_driver_dts_USBCDCEthernet::configureDevice - Getting Hardware Address");
+        
+        ior = ReadRegister(RegPAR, sizeof(fEaddr), fEaddr);
+        if (ior != kIOReturnSuccess)
+        {
+            ELG(0, ior, 'RR--', "com_apple_driver_dts_USBCDCEthernet::configureDevice - Getting Hardware Address failed");
+            return false;
+        }
+        
+        // Found both so now let's publish the interface
+        
         if (!createNetworkInterface())
         {
             ELG(0, 0, 'cDc-', "com_apple_driver_dts_USBCDCEthernet::configureDevice - createNetworkInterface failed");
@@ -1050,9 +1050,9 @@ bool com_apple_driver_dts_USBCDCEthernet::configureDevice(UInt8 numConfigs)
             ELG(0, ior, 'cCSD', "com_apple_driver_dts_USBCDCEthernet::configureDevice - SuspendDevice error");
         }
     }
-
+    
     return true;
-
+    
 }/* end configureDevice */
 
 /****************************************************************************************************/
@@ -1076,18 +1076,18 @@ bool com_apple_driver_dts_USBCDCEthernet::initDevice(UInt8 numConfigs)
     UInt8				cval;
     UInt8				config = 0;
     bool				goodconfig = false;
-       
+    
     ELG(0, numConfigs, 'cDev', "com_apple_driver_dts_USBCDCEthernet::initDevice");
-    	
-        // Make sure we have a CDC interface to play with
-        
+    
+    // Make sure we have a CDC interface to play with
+    
     for (cval=0; cval<numConfigs; cval++)
     {
-    	ELG(0, cval, 'CkCn', "com_apple_driver_dts_USBCDCEthernet::initDevice - Checking Configuration");
-		
-     	cd = fpDevice->GetFullConfigurationDescriptor(cval);
-     	if (!cd)
-    	{
+        ELG(0, cval, 'CkCn', "com_apple_driver_dts_USBCDCEthernet::initDevice - Checking Configuration");
+        
+        cd = fpDevice->GetFullConfigurationDescriptor(cval);
+        if (!cd)
+        {
             ELG(0, 0, 'GFC-', "com_apple_driver_dts_USBCDCEthernet::initDevice - Error getting the full configuration descriptor");
         } else {
             req.bInterfaceClass	= kUSBCompositeClass;
@@ -1111,14 +1111,14 @@ bool com_apple_driver_dts_USBCDCEthernet::initDevice(UInt8 numConfigs)
             }
         }
     }
-        
+    
     if (goodconfig)
     {
         ior = fpDevice->SetConfiguration(this, config);
         if (ior != kIOReturnSuccess)
         {
             ELG(0, ior, 'SCo-', "com_apple_driver_dts_USBCDCEthernet::initDevice - SetConfiguration error");
-            goodconfig = false;			
+            goodconfig = false;
         }
     } else {
         return false;
@@ -1127,13 +1127,13 @@ bool com_apple_driver_dts_USBCDCEthernet::initDevice(UInt8 numConfigs)
     fbmAttributes = cd->bmAttributes;
     ELG(fbmAttributes, kUSBAtrRemoteWakeup, 'GFbA', "com_apple_driver_dts_USBCDCEthernet::initDevice - Configuration bmAttributes");
     
-        // Save the ID's
+    // Save the ID's
     
     fVendorID = fpDevice->GetVendorID();
     fProductID = fpDevice->GetProductID();
     
     return goodconfig;
-
+    
 }/* end initDevice */
 
 /****************************************************************************************************/
@@ -1156,9 +1156,9 @@ bool com_apple_driver_dts_USBCDCEthernet::getFunctionalDescriptors()
     IOReturn				ior;
     const HeaderFunctionalDescriptor 	*funcDesc = NULL;
     EnetFunctionalDescriptor		*ENETFDesc = NULL;
-       
+    
     ELG(0, 0, 'gFDs', "com_apple_driver_dts_USBCDCEthernet::getFunctionalDescriptors");
-        
+    
     do
     {
         funcDesc = (const HeaderFunctionalDescriptor *)fCommInterface->FindNextAssociatedDescriptor((void*)funcDesc, CS_INTERFACE);
@@ -1185,14 +1185,14 @@ bool com_apple_driver_dts_USBCDCEthernet::getFunctionalDescriptors()
             }
         }
     } while(!gotDescriptors);
-
+    
     if (!enet)
     {
         configok = false;					// The Enet Func. Desc.  must be present
     } else {
-    
-            // Determine who is collecting the input/output network stats.
-    
+        
+        // Determine who is collecting the input/output network stats.
+        
         if (!(ENETFDesc->bmEthernetStatistics[0] & kXMIT_OK))
         {
             fOutputPktsOK = true;
@@ -1218,21 +1218,21 @@ bool com_apple_driver_dts_USBCDCEthernet::getFunctionalDescriptors()
             fInputErrsOK = false;
         }
         
-            // Save the stats (it's bit mapped)
+        // Save the stats (it's bit mapped)
         
         fEthernetStatistics[0] = ENETFDesc->bmEthernetStatistics[0];
         fEthernetStatistics[1] = ENETFDesc->bmEthernetStatistics[1];
         fEthernetStatistics[2] = ENETFDesc->bmEthernetStatistics[2];
         fEthernetStatistics[3] = ENETFDesc->bmEthernetStatistics[3];
         
-            // Save the multicast filters (remember it's intel format)
+        // Save the multicast filters (remember it's intel format)
         
         fMcFilters = USBToHostWord((UInt16)ENETFDesc->wNumberMCFilters[0]);
         
-            // Get the Ethernet address
-    
+        // Get the Ethernet address
+        
         if (ENETFDesc->iMACAddress != 0)
-        {	
+        {
             ior = fpDevice->GetStringDescriptor(ENETFDesc->iMACAddress, (char *)&fEaddr, 6);
             if (ior == kIOReturnSuccess)
             {
@@ -1270,25 +1270,25 @@ bool com_apple_driver_dts_USBCDCEthernet::getFunctionalDescriptors()
 
 bool com_apple_driver_dts_USBCDCEthernet::createNetworkInterface()
 {
-	
+    
     ELG(0, 0, 'crIf', "com_apple_driver_dts_USBCDCEthernet::createNetworkInterface");
     
-            // Allocate memory for buffers etc
-
+    // Allocate memory for buffers etc
+    
     fTransmitQueue = (IOGatedOutputQueue *)getOutputQueue();
-    if (!fTransmitQueue) 
+    if (!fTransmitQueue)
     {
         ALERT(0, 0, 'crO-', "com_apple_driver_dts_USBCDCEthernet::createNetworkInterface - Output queue initialization failed");
         return false;
     }
     fTransmitQueue->retain();
     
-        // Get a reference to the IOWorkLoop in our superclass
-        
+    // Get a reference to the IOWorkLoop in our superclass
+    
     fWorkLoop = getWorkLoop();
     
-        // Allocate Timer event source
-        
+    // Allocate Timer event source
+    
     fTimerSource = IOTimerEventSource::timerEventSource(this, timerFired);
     if (fTimerSource == NULL)
     {
@@ -1298,28 +1298,28 @@ bool com_apple_driver_dts_USBCDCEthernet::createNetworkInterface()
     
     if (fWorkLoop->addEventSource(fTimerSource) != kIOReturnSuccess)
     {
-        ALERT(0, 0, 'crt-', "com_apple_driver_dts_USBCDCEthernet::start - Add Timer event source failed");        
+        ALERT(0, 0, 'crt-', "com_apple_driver_dts_USBCDCEthernet::start - Add Timer event source failed");
         return false;
     }
-
-        // Attach an IOEthernetInterface client
-        
+    
+    // Attach an IOEthernetInterface client
+    
     ELG(0, 0, 'crai', "com_apple_driver_dts_USBCDCEthernet::createNetworkInterface - attaching and registering interface");
     
     if (!attachInterface((IONetworkInterface **)&fNetworkInterface, true))
-    {	
-        ALERT( 0, 0, 'crt-', "com_apple_driver_dts_USBCDCEthernet::createNetworkInterface - attachInterface failed");      
+    {
+        ALERT( 0, 0, 'crt-', "com_apple_driver_dts_USBCDCEthernet::createNetworkInterface - attachInterface failed");
         return false;
     }
     
-        // Ready to service interface requests
+    // Ready to service interface requests
     
     fNetworkInterface->registerService();
     
     ELG(0, 0, 'crEx', "com_apple_driver_dts_USBCDCEthernet::createNetworkInterface - Exiting, successful");
-
+    
     return true;
-	
+    
 }/* end createNetworkInterface */
 
 /****************************************************************************************************/
@@ -1342,11 +1342,11 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::enable(IONetworkInterface *netif)
     IOMediumType    	mediumType = kIOMediumEthernet100BaseTX | kIOMediumOptionFullDuplex;
     
     ELG(0, netif, 'enbl', "com_apple_driver_dts_USBCDCEthernet::enable");
-
-        // If an interface client has previously enabled us,
-        // and we know there can only be one interface client
-        // for this driver, then simply return true.
-
+    
+    // If an interface client has previously enabled us,
+    // and we know there can only be one interface client
+    // for this driver, then simply return true.
+    
     if (fNetifEnabled)
     {
         ELG(0, 0, 'enae', "com_apple_driver_dts_USBCDCEthernet::enable - already enabled");
@@ -1358,12 +1358,12 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::enable(IONetworkInterface *netif)
         ELG(0, fReady, 'enr-', "com_apple_driver_dts_USBCDCEthernet::enable - failed");
         return kIOReturnIOError;
     }
-
-        // Mark the controller as enabled by the interface.
-
+    
+    // Mark the controller as enabled by the interface.
+    
     fNetifEnabled = true;
     
-        // Assume an active link for now
+    // Assume an active link for now
     
     fLinkStatus = 1;
     medium = IONetworkMedium::getMediumWithType(fMediumDict, mediumType);
@@ -1371,8 +1371,8 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::enable(IONetworkInterface *netif)
     setLinkStatus(kIONetworkLinkActive | kIONetworkLinkValid, medium, 10 * 1000000);
     ELG(0, 0, 'enaL', "com_apple_driver_dts_USBCDCEthernet::enable - LinkStatus set");
     
-        // Start our IOOutputQueue object.
-
+    // Start our IOOutputQueue object.
+    
     fTransmitQueue->setCapacity(TRANSMIT_QUEUE_SIZE);
     ELG(0, TRANSMIT_QUEUE_SIZE, 'enaC', "com_apple_driver_dts_USBCDCEthernet::enable - capicity set");
     fTransmitQueue->start();
@@ -1380,7 +1380,7 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::enable(IONetworkInterface *netif)
     
     USBSetPacketFilter();
     ELG(0, 0, 'enaP', "com_apple_driver_dts_USBCDCEthernet::enable - packet filter applied");
-
+    
     return kIOReturnSuccess;
     
 }/* end enable */
@@ -1398,27 +1398,27 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::enable(IONetworkInterface *netif)
 //				thread
 //
 /****************************************************************************************************/
- 
+
 IOReturn com_apple_driver_dts_USBCDCEthernet::disable(IONetworkInterface * /*netif*/)
 {
-
+    
     ELG(0, 0, 'dsbl', "com_apple_driver_dts_USBCDCEthernet::disable");
-
-        // Disable our IOOutputQueue object. This will prevent the
-        // outputPacket() method from being called
-        
+    
+    // Disable our IOOutputQueue object. This will prevent the
+    // outputPacket() method from being called
+    
     fTransmitQueue->stop();
-
-        // Flush all packets currently in the output queue
-
+    
+    // Flush all packets currently in the output queue
+    
     fTransmitQueue->setCapacity(0);
     fTransmitQueue->flush();
-
+    
     putToSleep();
-
+    
     fNetifEnabled = false;
     fReady = false;
-
+    
     return kIOReturnSuccess;
     
 }/* end disable */
@@ -1438,22 +1438,22 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::disable(IONetworkInterface * /*net
 IOReturn com_apple_driver_dts_USBCDCEthernet::setWakeOnMagicPacket(bool active)
 {
 #if 1
-  return kIOReturnSuccess;
+    return kIOReturnSuccess;
 #else
     IOUSBDevRequest	devreq;
     IOReturn		ior = kIOReturnSuccess;
-
+    
     ELG(0, active, 'sWMP', "com_apple_driver_dts_USBCDCEthernet::setWakeOnMagicPacket");
-	
+    
     fWOL = active;
     
     if (fbmAttributes & kUSBAtrRemoteWakeup)
     {
-    
-            // Clear the feature if wake-on-lan is not set (SetConfiguration sets the feature 
-            // automatically if the device supports remote wake up)
-    
-        if (!active)				
+        
+        // Clear the feature if wake-on-lan is not set (SetConfiguration sets the feature
+        // automatically if the device supports remote wake up)
+        
+        if (!active)
         {
             devreq.bmRequestType = USBmakebmRequestType(kUSBOut, kUSBStandard, kUSBDevice);
             devreq.bRequest = kUSBRqClearFeature;
@@ -1461,7 +1461,7 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::setWakeOnMagicPacket(bool active)
             devreq.wIndex = 0;
             devreq.wLength = 0;
             devreq.pData = 0;
-
+            
             ior = fpDevice->DeviceRequest(&devreq);
             if (ior == kIOReturnSuccess)
             {
@@ -1473,7 +1473,7 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::setWakeOnMagicPacket(bool active)
     } else {
         ELG(0, 0, 'SCRw', "com_apple_driver_dts_USBCDCEthernet::initDevice - Remote wake up not supported");
     }
-
+    
     
     return kIOReturnSuccess;
 #endif
@@ -1495,12 +1495,12 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::setWakeOnMagicPacket(bool active)
 IOReturn com_apple_driver_dts_USBCDCEthernet::getPacketFilters(const OSSymbol *group, UInt32 *filters) const
 {
 #if 1
-	return kIOReturnSuccess;
+    return kIOReturnSuccess;
 #else
     IOReturn	rtn = kIOReturnSuccess;
     
     ELG(group, filters, 'gPkF', "com_apple_driver_dts_USBCDCEthernet::getPacketFilters");
-
+    
     if (group == gIOEthernetWakeOnLANFilterGroup)
     {
         if (fbmAttributes & kUSBAtrRemoteWakeup)
@@ -1543,11 +1543,11 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::selectMedium(const IONetworkMedium
 {
     
     ELG(0, 0, 'SlMd', "com_apple_driver_dts_USBCDCEthernet::selectMedium");
-
+    
     setSelectedMedium(medium);
     
     return kIOReturnSuccess;
-        
+    
 }/* end selectMedium */
 
 /****************************************************************************************************/
@@ -1566,14 +1566,14 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::selectMedium(const IONetworkMedium
 IOReturn com_apple_driver_dts_USBCDCEthernet::getHardwareAddress(IOEthernetAddress *ea)
 {
     UInt32      i;
-
+    
     ELG(0, 0, 'gHdA', "com_apple_driver_dts_USBCDCEthernet::getHardwareAddress");
-     
+    
     for (i=0; i<6; i++)
     {
         ea->bytes[i] = fEaddr[i];
     }
-
+    
     return kIOReturnSuccess;
     
 }/* end getHardwareAddress */
@@ -1592,11 +1592,11 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::getHardwareAddress(IOEthernetAddre
 
 const OSString* com_apple_driver_dts_USBCDCEthernet::newVendorString() const
 {
-
+    
     ELG(0, 0, 'nVSt', "com_apple_driver_dts_USBCDCEthernet::newVendorString");
     
     return OSString::withCString((const char *)defaultName);		// Maybe we should use the descriptors
-
+    
 }/* end newVendorString */
 
 /****************************************************************************************************/
@@ -1613,7 +1613,7 @@ const OSString* com_apple_driver_dts_USBCDCEthernet::newVendorString() const
 
 const OSString* com_apple_driver_dts_USBCDCEthernet::newModelString() const
 {
-
+    
     ELG(0, 0, 'nMSt', "com_apple_driver_dts_USBCDCEthernet::newModelString");
     
     return OSString::withCString("USB");		// Maybe we should use the descriptors
@@ -1634,7 +1634,7 @@ const OSString* com_apple_driver_dts_USBCDCEthernet::newModelString() const
 
 const OSString* com_apple_driver_dts_USBCDCEthernet::newRevisionString() const
 {
-
+    
     ELG(0, 0, 'nRSt', "com_apple_driver_dts_USBCDCEthernet::newRevisionString");
     
     return OSString::withCString("");
@@ -1655,9 +1655,9 @@ const OSString* com_apple_driver_dts_USBCDCEthernet::newRevisionString() const
 
 IOReturn com_apple_driver_dts_USBCDCEthernet::setMulticastMode(bool active)
 {
-
+    
     ELG(0, active, 'stMM', "com_apple_driver_dts_USBCDCEthernet::setMulticastMode" );
-
+    
     if (active)
     {
         fPacketFilter |= kPACKET_TYPE_ALL_MULTICAST;
@@ -1687,7 +1687,7 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::setMulticastMode(bool active)
 IOReturn com_apple_driver_dts_USBCDCEthernet::setMulticastList(IOEthernetAddress *addrs, UInt32 count)
 {
 #if 1
-  return kIOReturnSuccess;
+    return kIOReturnSuccess;
 #else
     bool	uStat;
     ELG(addrs, count, 'stML', "com_apple_driver_dts_USBCDCEthernet::setMulticastList" );
@@ -1700,7 +1700,7 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::setMulticastList(IOEthernetAddress
             return kIOReturnIOError;
         }
     }
-
+    
     return kIOReturnSuccess;
 #endif
 }/* end setMulticastList */
@@ -1721,7 +1721,7 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::setPromiscuousMode(bool active)
 {
     
     ELG(0, active, 'stPM', "com_apple_driver_dts_USBCDCEthernet::setPromiscuousMode");
-
+    
     if (active)
     {
         fPacketFilter |= kPACKET_TYPE_PROMISCUOUS;
@@ -1730,7 +1730,7 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::setPromiscuousMode(bool active)
     }
     
     USBSetPacketFilter();
-        
+    
     return kIOReturnSuccess;
     
 }/* end setPromiscuousMode */
@@ -1749,7 +1749,7 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::setPromiscuousMode(bool active)
 
 IOOutputQueue* com_apple_driver_dts_USBCDCEthernet::createOutputQueue()
 {
-
+    
     ELG(0, 0, 'crOQ', "com_apple_driver_dts_USBCDCEthernet::createOutputQueue" );
     
     return IOBasicOutputQueue::withTarget(this, TRANSMIT_QUEUE_SIZE);
@@ -1775,20 +1775,20 @@ UInt32 com_apple_driver_dts_USBCDCEthernet::outputPacket(mbuf_t pkt, void *param
     UInt32	ret = kIOReturnOutputSuccess;
     
     ELG(pkt, 0, 'otPk', "com_apple_driver_dts_USBCDCEthernet::outputPacket" );
-
+    
     if (!fLinkStatus)
     {
         ELG(pkt, fLinkStatus, 'otL-', "com_apple_driver_dts_USBCDCEthernet::outputPacket - link is down" );
         if (fOutputErrsOK)
             fpNetStats->outputErrors++;
         freePacket(pkt);
-    } else { 
+    } else {
         if (USBTransmitPacket(pkt) == false)
         {
             ret = kIOReturnOutputStall;
         }
     }
-
+    
     return ret;
     
 }/* end outputPacket */
@@ -1808,33 +1808,33 @@ UInt32 com_apple_driver_dts_USBCDCEthernet::outputPacket(mbuf_t pkt, void *param
 bool com_apple_driver_dts_USBCDCEthernet::configureInterface(IONetworkInterface *netif)
 {
     IONetworkData	*nd;
-
+    
     ELG(IOThreadSelf(), netif, 'cfIt', "com_apple_driver_dts_USBCDCEthernet::configureInterface");
-
+    
     if (super::configureInterface(netif) == false)
     {
         ALERT(0, 0, 'cfs-', "com_apple_driver_dts_USBCDCEthernet::configureInterface - super failed");
         return false;
     }
     
-        // Get a pointer to the statistics structure in the interface
-
+    // Get a pointer to the statistics structure in the interface
+    
     nd = netif->getNetworkData(kIONetworkStatsKey);
     if (!nd || !(fpNetStats = (IONetworkStats *)nd->getBuffer()))
     {
         ALERT(0, 0, 'cfn-', "com_apple_driver_dts_USBCDCEthernet::configureInterface - Invalid network statistics");
         return false;
     }
-
-        // Get the Ethernet statistics structure:
-
+    
+    // Get the Ethernet statistics structure:
+    
     nd = netif->getParameter(kIOEthernetStatsKey);
     if (!nd || !(fpEtherStats = (IOEthernetStats*)nd->getBuffer()))
     {
         ALERT(0, 0, 'cfe-', "com_apple_driver_dts_USBCDCEthernet::configureInterface - Invalid ethernet statistics\n" );
         return false;
     }
-
+    
     return true;
     
 }/* end configureInterface */
@@ -1855,13 +1855,13 @@ bool com_apple_driver_dts_USBCDCEthernet::configureInterface(IONetworkInterface 
 bool com_apple_driver_dts_USBCDCEthernet::wakeUp()
 {
     IOReturn 	rtn = kIOReturnSuccess;
-
+    
     ELG(0, 0, 'wkUp', "com_apple_driver_dts_USBCDCEthernet::wakeUp");
     
     fReady = false;
     
     if (fTimerSource)
-    { 
+    {
         fTimerSource->cancelTimeout();
     }
     
@@ -1878,30 +1878,30 @@ bool com_apple_driver_dts_USBCDCEthernet::wakeUp()
     
     IOSleep(50);
     
-    if (!allocateResources()) 
+    if (!allocateResources())
     {
-    	return false;
+        return false;
     }
-  
+    
     // Initialize RX control register, enable RX
     UInt8 control = 0;
     rtn = ReadRegister(RegRCR, sizeof(control), &control);
     if (rtn != kIOReturnSuccess)
     {
-      releaseResources();
-      return false;
+        releaseResources();
+        return false;
     }
     control &= ~RCRPromiscuous;
     control |= RCRDiscardLong | RCRDiscardCRC | RCRRXEnable;
     rtn = Write1Register(RegRCR, control);
     if (rtn != kIOReturnSuccess)
     {
-      releaseResources();
-      return false;
+        releaseResources();
+        return false;
     }
-  
-        // Read the comm interrupt pipe for status:
-		
+    
+    // Read the comm interrupt pipe for status:
+    
     fCommCompletionInfo.target = this;
     fCommCompletionInfo.action = commReadComplete;
     fCommCompletionInfo.parameter = NULL;
@@ -1912,41 +1912,41 @@ bool com_apple_driver_dts_USBCDCEthernet::wakeUp()
     }
     if (rtn == kIOReturnSuccess)
     {
-        	// Read the data-in bulk pipe:
-			
+        // Read the data-in bulk pipe:
+        
         fReadCompletionInfo.target = this;
         fReadCompletionInfo.action = dataReadComplete;
         fReadCompletionInfo.parameter = NULL;
-		
+        
         rtn = fInPipe->Read(fPipeInMDP, &fReadCompletionInfo, NULL);
-			
+        
         if (rtn == kIOReturnSuccess)
         {
-        	// Set up the data-out bulk pipe:
-			
+            // Set up the data-out bulk pipe:
+            
             fWriteCompletionInfo.target	= this;
             fWriteCompletionInfo.action	= dataWriteComplete;
             fWriteCompletionInfo.parameter = NULL;				// for now, filled in with the mbuf address when sent
-		
-                // Set up the management element request completion routine:
-
+            
+            // Set up the management element request completion routine:
+            
             fMERCompletionInfo.target = this;
             fMERCompletionInfo.action = merWriteComplete;
             fMERCompletionInfo.parameter = NULL;				// for now, filled in with parm block when allocated
             
-                // Set up the statistics request completion routine:
-
+            // Set up the statistics request completion routine:
+            
             fStatsCompletionInfo.target = this;
             fStatsCompletionInfo.action = statsWriteComplete;
             fStatsCompletionInfo.parameter = NULL;				// for now, filled in with parm block when allocated
         }
     }
-
+    
     if (rtn != kIOReturnSuccess)
     {
-    
-    	// We failed for some reason
-	
+        
+        // We failed for some reason
+        
         ALERT(0, 0, 'wkp-', "com_apple_driver_dts_USBCDCEthernet::wakeUp - Setting up the pipes failed" );
         releaseResources();
         return false;
@@ -1956,17 +1956,17 @@ bool com_apple_driver_dts_USBCDCEthernet::wakeUp()
             if (!createMediumTables())
             {
                 ALERT(0, 0, 'wkc-', "com_apple_driver_dts_USBCDCEthernet::wakeUp - createMediumTables failed" );
-                releaseResources();    
+                releaseResources();
                 return false;
             }
         }
-
+        
         fTimerSource->setTimeoutMS(WATCHDOG_TIMER_MS);
         fReady = true;
     }
-
+    
     return true;
-	
+    
 }/* end wakeUp */
 
 /****************************************************************************************************/
@@ -1984,20 +1984,20 @@ bool com_apple_driver_dts_USBCDCEthernet::wakeUp()
 void com_apple_driver_dts_USBCDCEthernet::putToSleep()
 {
     IOReturn	ior;
-
+    
     ELG(0, 0, 'pToS', "com_apple_driver_dts_USBCDCEthernet::putToSleep");
-        
+    
     fReady = false;
-
+    
     if (fTimerSource)
-    { 
+    {
         fTimerSource->cancelTimeout();
     }
-
+    
     setLinkStatus(0, 0);
-	
-        // Release all resources
-		
+    
+    // Release all resources
+    
     releaseResources();
     
     if (!fTerminate)
@@ -2011,10 +2011,10 @@ void com_apple_driver_dts_USBCDCEthernet::putToSleep()
             }
         }
     }
-
+    
     if ((fTerminate) && (!fReady))		// if it's the result of a terminate and no interfaces enabled we also need to close the device
     {
-    	fpDevice->close(this);
+        fpDevice->close(this);
         fpDevice = NULL;
     }
     
@@ -2037,9 +2037,9 @@ bool com_apple_driver_dts_USBCDCEthernet::createMediumTables()
     IONetworkMedium	*medium;
     UInt64		maxSpeed;
     UInt32		i;
-
+    
     ELG(0, 0, 'crMT', "com_apple_driver_dts_USBCDCEthernet::createMediumTables");
-
+    
     maxSpeed = 100;
     fMediumDict = OSDictionary::withCapacity(sizeof(mediumTable) / sizeof(mediumTable[0]));
     if (fMediumDict == 0)
@@ -2047,7 +2047,7 @@ bool com_apple_driver_dts_USBCDCEthernet::createMediumTables()
         ELG( 0, 0, 'crc-', "com_apple_driver_dts_USBCDCEthernet::createMediumTables - create dict. failed" );
         return false;
     }
-
+    
     for (i = 0; i < sizeof(mediumTable) / sizeof(mediumTable[0]); i++ )
     {
         medium = IONetworkMedium::medium(mediumTable[i].type, mediumTable[i].speed);
@@ -2057,16 +2057,16 @@ bool com_apple_driver_dts_USBCDCEthernet::createMediumTables()
             medium->release();
         }
     }
-
+    
     if (publishMediumDictionary(fMediumDict) != true)
     {
         ELG( 0, 0, 'crp-', "com_apple_driver_dts_USBCDCEthernet::createMediumTables - publish dict. failed" );
         return false;
     }
-
+    
     medium = IONetworkMedium::getMediumWithType(fMediumDict, kIOMediumEthernetAuto);
     setCurrentMedium(medium);
-
+    
     return true;
     
 }/* end createMediumTables */
@@ -2087,11 +2087,11 @@ bool com_apple_driver_dts_USBCDCEthernet::allocateResources()
 {
     IOUSBFindEndpointRequest	epReq;		// endPoint request struct on stack
     UInt32			i;
-
+    
     ELG(0, 0, 'Allo', "com_apple_driver_dts_USBCDCEthernet::allocateResources.");
-
-        // Open all the end points
-
+    
+    // Open all the end points
+    
     epReq.type = kUSBBulk;
     epReq.direction = kUSBIn;
     epReq.maxPacketSize	= 0x40;
@@ -2103,7 +2103,7 @@ bool com_apple_driver_dts_USBCDCEthernet::allocateResources()
         return false;
     }
     ELG(epReq.maxPacketSize << 16 |epReq.interval, fInPipe, 'inP+', "com_apple_driver_dts_USBCDCEthernet::allocateResources - bulk input pipe.");
-
+    
     epReq.direction = kUSBOut;
     fOutPipe = fDataInterface->FindNextPipe(0, &epReq);
     if (!fOutPipe)
@@ -2113,9 +2113,9 @@ bool com_apple_driver_dts_USBCDCEthernet::allocateResources()
     }
     fOutPacketSize = epReq.maxPacketSize;
     ELG(epReq.maxPacketSize << 16 |epReq.interval, fOutPipe, 'otP+', "com_apple_driver_dts_USBCDCEthernet::allocateResources - bulk output pipe.");
-
-        // Interrupt pipe - Comm Interface
-
+    
+    // Interrupt pipe - Comm Interface
+    
     epReq.type = kUSBInterrupt;
     epReq.direction = kUSBIn;
     fCommPipe = fCommInterface->FindNextPipe(0, &epReq);
@@ -2124,33 +2124,33 @@ bool com_apple_driver_dts_USBCDCEthernet::allocateResources()
         ELG(0, 0, 'cmP-', "com_apple_driver_dts_USBCDCEthernet::allocateResources - no interrupt in pipe.");
         fCommPipeMDP = NULL;
         fCommPipeBuffer = NULL;
-//        return false;
+        //        return false;
     } else {
         ELG(epReq.maxPacketSize << 16 |epReq.interval, fCommPipe, 'cmP+', "com_apple_driver_dts_USBCDCEthernet::allocateResources - comm pipe.");
-
-            // Allocate Memory Descriptor Pointer with memory for the Comm pipe:
-
+        
+        // Allocate Memory Descriptor Pointer with memory for the Comm pipe:
+        
         fCommPipeMDP = IOBufferMemoryDescriptor::withCapacity(COMM_BUFF_SIZE, kIODirectionIn);
         if (!fCommPipeMDP)
             return false;
-		
+        
         fCommPipeMDP->setLength(COMM_BUFF_SIZE);
         fCommPipeBuffer = (UInt8*)fCommPipeMDP->getBytesNoCopy();
         ELG(0, fCommPipeBuffer, 'cBuf', "com_apple_driver_dts_USBCDCEthernet::allocateResources - comm buffer");
     }
-
-        // Allocate Memory Descriptor Pointer with memory for the data-in bulk pipe:
-
+    
+    // Allocate Memory Descriptor Pointer with memory for the data-in bulk pipe:
+    
     fPipeInMDP = IOBufferMemoryDescriptor::withCapacity(fMax_Block_Size, kIODirectionIn);
     if (!fPipeInMDP)
         return false;
-		
+    
     fPipeInMDP->setLength(fMax_Block_Size);
     fPipeInBuffer = (UInt8*)fPipeInMDP->getBytesNoCopy();
     ELG(fMax_Block_Size, fPipeInBuffer, 'iBuf', "com_apple_driver_dts_USBCDCEthernet::allocateResources - input buffer");
     
-        // Allocate Memory Descriptor Pointers with memory for the data-out bulk pipe pool
-
+    // Allocate Memory Descriptor Pointers with memory for the data-out bulk pipe pool
+    
     for (i=0; i<kOutBufPool; i++)
     {
         fPipeOutBuff[i].pipeOutMDP = IOBufferMemoryDescriptor::withCapacity(fMax_Block_Size, kIODirectionOut);
@@ -2159,14 +2159,14 @@ bool com_apple_driver_dts_USBCDCEthernet::allocateResources()
             ELG(0, 0, 'obf-', "com_apple_driver_dts_USBCDCEthernet::allocateResources - Allocate output descriptor failed");
             return false;
         }
-		
+        
         fPipeOutBuff[i].pipeOutMDP->setLength(fMax_Block_Size);
         fPipeOutBuff[i].pipeOutBuffer = (UInt8*)fPipeOutBuff[i].pipeOutMDP->getBytesNoCopy();
         ELG(fPipeOutBuff[i].pipeOutMDP, fPipeOutBuff[i].pipeOutBuffer, 'oBuf', "com_apple_driver_dts_USBCDCEthernet::allocateResources - output buffer");
     }
-		
+    
     return true;
-	
+    
 }/* end allocateResources */
 
 /****************************************************************************************************/
@@ -2186,28 +2186,28 @@ void com_apple_driver_dts_USBCDCEthernet::releaseResources()
     UInt32	i;
     
     ELG(0, 0, 'rlRs', "com_apple_driver_dts_USBCDCEthernet::releaseResources");
-
+    
     for (i=0; i<kOutBufPool; i++)
     {
-        if (fPipeOutBuff[i].pipeOutMDP)	
-        { 
-            fPipeOutBuff[i].pipeOutMDP->release();	
+        if (fPipeOutBuff[i].pipeOutMDP)
+        {
+            fPipeOutBuff[i].pipeOutMDP->release();
             fPipeOutBuff[i].pipeOutMDP = NULL;
         }
     }
-	
-    if (fPipeInMDP  )	
-    { 
-        fPipeInMDP->release();	
-        fPipeInMDP = 0; 
+    
+    if (fPipeInMDP  )
+    {
+        fPipeInMDP->release();
+        fPipeInMDP = 0;
     }
-	
-    if (fCommPipeMDP)	
-    { 
-        fCommPipeMDP->release();	
-        fCommPipeMDP = 0; 
+    
+    if (fCommPipeMDP)
+    {
+        fCommPipeMDP->release();
+        fCommPipeMDP = 0;
     }
-	
+    
 }/* end releaseResources */
 
 /****************************************************************************************************/
@@ -2234,11 +2234,11 @@ bool com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket(mbuf_t packet)
     UInt32		poolIndx;
     bool		gotBuffer = false;
     UInt16		tryCount = 0;
-	
+    
     ELG (0, packet, 'txPk', "com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket");
-			
-	// Count the number of mbufs in this packet
-        
+    
+    // Count the number of mbufs in this packet
+    
     m = packet;
     while (m)
     {
@@ -2259,7 +2259,7 @@ bool com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket(mbuf_t packet)
         return false;
     }
     
-            // Find an ouput buffer in the pool
+    // Find an ouput buffer in the pool
     
     while (!gotBuffer)
     {
@@ -2273,7 +2273,7 @@ bool com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket(mbuf_t packet)
         }
         if (gotBuffer)
         {
-          ELG(0, poolIndx, 'txBT', "com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket - Output buffer found");
+            ELG(0, poolIndx, 'txBT', "com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket - Output buffer found");
             break;
         } else {
             tryCount++;
@@ -2289,13 +2289,13 @@ bool com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket(mbuf_t packet)
             }
         }
     }
-
-        // Start filling in the send buffer
-
+    
+    // Start filling in the send buffer
+    
     m = packet;							// start with the first mbuf of the packet
     rTotal = 2;							// running total
     do
-    {  
+    {
         if (mbuf_len(m) == 0)					// Ignore zero length mbufs
             continue;
         
@@ -2303,24 +2303,24 @@ bool com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket(mbuf_t packet)
         rTotal += mbuf_len(m);
         
     } while ((m = mbuf_next(m)) != 0);
-  
+    
     // additional padding byte must be transmitted in case data size
     // to be send is multiple of pipe's max packet size
     if ((rTotal % 0x40) == 0)
     {
-      ELG(0, rTotal, 'txAP', "com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket - Additional padding byte added");
-      rTotal++;
-      fPipeOutBuff[poolIndx].pipeOutBuffer[rTotal] = 0;
+        ELG(0, rTotal, 'txAP', "com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket - Additional padding byte added");
+        rTotal++;
+        fPipeOutBuff[poolIndx].pipeOutBuffer[rTotal] = 0;
     }
-  
+    
     ELG(total_pkt_length, rTotal, 'txAP', "com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket - Filling the send buffer");
-  
+    
     UInt32 tmp = rTotal-2;
     fPipeOutBuff[poolIndx].pipeOutBuffer[0] = (UInt8)(tmp & 0xff);
     fPipeOutBuff[poolIndx].pipeOutBuffer[1] = (UInt8)((tmp >> 8) & 0xff);
-  
+    
     LogData(kUSBOut, rTotal, fPipeOutBuff[poolIndx].pipeOutBuffer);
-	
+    
     fPipeOutBuff[poolIndx].m = packet;
     fWriteCompletionInfo.parameter = (void *)poolIndx;
     fPipeOutBuff[poolIndx].pipeOutMDP->setLength(rTotal);
@@ -2341,14 +2341,14 @@ bool com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket(mbuf_t packet)
             }
         }
     }
-
+    
     ELG(0, 0, 'txSc', "com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket - Write succeeded");
-  
-    if (fOutputPktsOK)		
+    
+    if (fOutputPktsOK)
         fpNetStats->outputPackets++;
     
     return true;
-
+    
 }/* end USBTransmitPacket */
 
 /****************************************************************************************************/
@@ -2367,22 +2367,22 @@ bool com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket(mbuf_t packet)
 bool com_apple_driver_dts_USBCDCEthernet::USBSetMulticastFilter(IOEthernetAddress *addrs, UInt32 count)
 {
 #if 1
-  return true;
+    return true;
 #else
     IOReturn		rc;
     IOUSBDevRequest	*MER;
     UInt8		*eaddrs;
     UInt32		eaddLen;
     UInt32		i,j,rnum;
-	
+    
     ELG(fMcFilters, count, 'USMF', "com_apple_driver_dts_USBCDCEthernet::USBSetMulticastFilter");
-
+    
     if (count > (UInt32)(fMcFilters & kFiltersSupportedMask))
     {
         ELG(0, 0, 'USf-', "com_apple_driver_dts_USBCDCEthernet::USBSetMulticastFilter - No multicast filters supported");
         return false;
     }
-
+    
     MER = (IOUSBDevRequest*)IOMalloc(sizeof(IOUSBDevRequest));
     if (!MER)
     {
@@ -2390,7 +2390,7 @@ bool com_apple_driver_dts_USBCDCEthernet::USBSetMulticastFilter(IOEthernetAddres
         return false;
     }
     bzero(MER, sizeof(IOUSBDevRequest));
-	
+    
     eaddLen = count * kIOEthernetAddressSize;
     eaddrs = (UInt8 *)IOMalloc(eaddLen);
     if (!eaddrs)
@@ -2398,10 +2398,10 @@ bool com_apple_driver_dts_USBCDCEthernet::USBSetMulticastFilter(IOEthernetAddres
         ELG(0, 0, 'USA-', "com_apple_driver_dts_USBCDCEthernet::USBSetMulticastFilter - allocate address buffer failed");
         return false;
     }
-    bzero(eaddrs, eaddLen); 
-	
-        // Build the filter address buffer
-         
+    bzero(eaddrs, eaddLen);
+    
+    // Build the filter address buffer
+    
     rnum = 0;
     for (i=0; i<count; i++)
     {
@@ -2415,17 +2415,17 @@ bool com_apple_driver_dts_USBCDCEthernet::USBSetMulticastFilter(IOEthernetAddres
         }
     }
     
-        // Now build the Management Element Request
-		
+    // Now build the Management Element Request
+    
     MER->bmRequestType = USBmakebmRequestType(kUSBOut, kUSBClass, kUSBInterface);
     MER->bRequest = kSet_Ethernet_Multicast_Filter;
     MER->wValue = count;
     MER->wIndex = fCommInterfaceNumber;
     MER->wLength = eaddLen;
     MER->pData = eaddrs;
-	
+    
     fMERCompletionInfo.parameter = MER;
-	
+    
     rc = fpDevice->DeviceRequest(MER, &fMERCompletionInfo);
     if (rc != kIOReturnSuccess)
     {
@@ -2461,27 +2461,27 @@ bool com_apple_driver_dts_USBCDCEthernet::USBSetPacketFilter()
     rc = ReadRegister(RegRCR, sizeof(control), &control);
     if (rc != kIOReturnSuccess)
     {
-      ELG(0, rc, 'USE-', "com_apple_driver_dts_USBCDCEthernet::USBSetPacketFilter - Error reading control");
-      return false;
+        ELG(0, rc, 'USE-', "com_apple_driver_dts_USBCDCEthernet::USBSetPacketFilter - Error reading control");
+        return false;
     }
     
     if (fPacketFilter & kPACKET_TYPE_PROMISCUOUS)
-      control |= RCRPromiscuous;
+        control |= RCRPromiscuous;
     else
-      control &= ~RCRPromiscuous;
+        control &= ~RCRPromiscuous;
     
     if (fPacketFilter & kPACKET_TYPE_ALL_MULTICAST)
-      control |= RCRAllMulticast;
+        control |= RCRAllMulticast;
     else
-      control &= ~RCRAllMulticast;
+        control &= ~RCRAllMulticast;
     
     rc = Write1Register(RegRCR, control);
     if (rc != kIOReturnSuccess)
     {
-      ELG(0, rc, 'USE-', "com_apple_driver_dts_USBCDCEthernet::USBSetPacketFilter - Error writing control");
-      return false;
+        ELG(0, rc, 'USE-', "com_apple_driver_dts_USBCDCEthernet::USBSetPacketFilter - Error writing control");
+        return false;
     }
-  
+    
     return true;
 }/* end USBSetPacketFilter */
 
@@ -2499,46 +2499,46 @@ bool com_apple_driver_dts_USBCDCEthernet::USBSetPacketFilter()
 
 IOReturn com_apple_driver_dts_USBCDCEthernet::ReadRegister(UInt16 reg, UInt16 size, UInt8* buffer)
 {
-  IOUSBDevRequest devreq;
-  IOReturn ior = kIOReturnSuccess;
-  
-  ELG(reg, size, 'RR--', "com_apple_driver_dts_USBCDCEthernet::ReadRegister");
-  
-	if (size > 255)
-		return kIOReturnBadArgument;
-  
-  devreq.bmRequestType = USBmakebmRequestType(kUSBIn, kUSBVendor, kUSBDevice);
-  devreq.bRequest = kVenReqReadRegister;
-  devreq.wValue = 0;
-  devreq.wIndex = reg;
-  devreq.wLength = size;
-  devreq.pData = buffer;
-  devreq.wLenDone = 0;
-  
-  ior = fpDevice->DeviceRequest(&devreq);
-  if (ior != kIOReturnSuccess)
-  {
-    ELG(devreq.bRequest, ior, 'USE-', "com_apple_driver_dts_USBCDCEthernet::ReadRegister - DeviceRequest error");
-    if (ior == kIOUSBPipeStalled)
+    IOUSBDevRequest devreq;
+    IOReturn ior = kIOReturnSuccess;
+    
+    ELG(reg, size, 'RR--', "com_apple_driver_dts_USBCDCEthernet::ReadRegister");
+    
+    if (size > 255)
+        return kIOReturnBadArgument;
+    
+    devreq.bmRequestType = USBmakebmRequestType(kUSBIn, kUSBVendor, kUSBDevice);
+    devreq.bRequest = kVenReqReadRegister;
+    devreq.wValue = 0;
+    devreq.wIndex = reg;
+    devreq.wLength = size;
+    devreq.pData = buffer;
+    devreq.wLenDone = 0;
+    
+    ior = fpDevice->DeviceRequest(&devreq);
+    if (ior != kIOReturnSuccess)
     {
-      // Clear the stall and try it once more
-      fpDevice->GetPipeZero()->ClearPipeStall(false);
-      ior = fpDevice->DeviceRequest(&devreq);
-      if (ior != kIOReturnSuccess)
-      {
-        ELG(devreq.bRequest, ior, 'USE-', "com_apple_driver_dts_USBCDCEthernet::ReadRegister - DeviceRequest, error a second time");
-        return ior;
-      }
+        ELG(devreq.bRequest, ior, 'USE-', "com_apple_driver_dts_USBCDCEthernet::ReadRegister - DeviceRequest error");
+        if (ior == kIOUSBPipeStalled)
+        {
+            // Clear the stall and try it once more
+            fpDevice->GetPipeZero()->ClearPipeStall(false);
+            ior = fpDevice->DeviceRequest(&devreq);
+            if (ior != kIOReturnSuccess)
+            {
+                ELG(devreq.bRequest, ior, 'USE-', "com_apple_driver_dts_USBCDCEthernet::ReadRegister - DeviceRequest, error a second time");
+                return ior;
+            }
+        }
     }
-  }
-  
-  if (size != devreq.wLenDone)
-  {
-    ELG(size, devreq.wLenDone, 'RRSz', "com_apple_driver_dts_USBCDCEthernet::ReadRegister - Size mismatch reading register !");
-    return kIOReturnUnderrun;
-  }
-  
-	return ior;
+    
+    if (size != devreq.wLenDone)
+    {
+        ELG(size, devreq.wLenDone, 'RRSz', "com_apple_driver_dts_USBCDCEthernet::ReadRegister - Size mismatch reading register !");
+        return kIOReturnUnderrun;
+    }
+    
+    return ior;
 }/* end ReadRegister */
 
 /****************************************************************************************************/
@@ -2555,33 +2555,33 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::ReadRegister(UInt16 reg, UInt16 si
 
 IOReturn com_apple_driver_dts_USBCDCEthernet::WriteRegister(UInt16 reg, UInt16 size, UInt8* buffer)
 {
-  IOUSBDevRequest devreq;
-  IOReturn ior = kIOReturnSuccess;
-  
-  ELG(reg, size, 'WR--', "com_apple_driver_dts_USBCDCEthernet::WriteRegister");
-  
-	if (size > 255)
-		return kIOReturnBadArgument;
-  
-  devreq.bmRequestType = USBmakebmRequestType(kUSBOut, kUSBVendor, kUSBDevice);
-  devreq.bRequest = kVenReqWriteRegister;
-  devreq.wValue = 0;
-  devreq.wIndex = reg;
-  devreq.wLength = size;
-  devreq.pData = buffer;
-  devreq.wLenDone = 0;
-  
-  ior = fpDevice->DeviceRequest(&devreq);
-  if (kIOReturnSuccess == ior && devreq.wLenDone != size)
-  {
-    ior = kIOReturnUnderrun;
-  }
-  if (ior != kIOReturnSuccess)
-  {
-    ELG(devreq.bRequest, ior, 'USE-', "com_apple_driver_dts_USBCDCEthernet::WriteRegister - DeviceRequest error");
-  }
-  
-	return ior;
+    IOUSBDevRequest devreq;
+    IOReturn ior = kIOReturnSuccess;
+    
+    ELG(reg, size, 'WR--', "com_apple_driver_dts_USBCDCEthernet::WriteRegister");
+    
+    if (size > 255)
+        return kIOReturnBadArgument;
+    
+    devreq.bmRequestType = USBmakebmRequestType(kUSBOut, kUSBVendor, kUSBDevice);
+    devreq.bRequest = kVenReqWriteRegister;
+    devreq.wValue = 0;
+    devreq.wIndex = reg;
+    devreq.wLength = size;
+    devreq.pData = buffer;
+    devreq.wLenDone = 0;
+    
+    ior = fpDevice->DeviceRequest(&devreq);
+    if (kIOReturnSuccess == ior && devreq.wLenDone != size)
+    {
+        ior = kIOReturnUnderrun;
+    }
+    if (ior != kIOReturnSuccess)
+    {
+        ELG(devreq.bRequest, ior, 'USE-', "com_apple_driver_dts_USBCDCEthernet::WriteRegister - DeviceRequest error");
+    }
+    
+    return ior;
 }/* end WriteRegister */
 
 /****************************************************************************************************/
@@ -2598,37 +2598,37 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::WriteRegister(UInt16 reg, UInt16 s
 
 IOReturn com_apple_driver_dts_USBCDCEthernet::Write1Register(UInt16 reg, UInt8 value)
 {
-  IOUSBDevRequest devreq;
-  IOReturn ior = kIOReturnSuccess;
-  
-  ELG(reg, value, 'W1R-', "com_apple_driver_dts_USBCDCEthernet::Write1Register");
-  
-  devreq.bmRequestType = USBmakebmRequestType(kUSBOut, kUSBVendor, kUSBDevice);
-  devreq.bRequest = kVenReqWriteRegisterByte;
-  devreq.wValue = value;
-  devreq.wIndex = reg;
-  devreq.wLength = 0;
-  devreq.pData = NULL;
-  devreq.wLenDone = 0;
-  
-  ior = fpDevice->DeviceRequest(&devreq);
-  if (ior != kIOReturnSuccess)
-  {
-    ELG(devreq.bRequest, ior, 'USE-', "com_apple_driver_dts_USBCDCEthernet::Write1Register - DeviceRequest error");
-    if (ior == kIOUSBPipeStalled)
+    IOUSBDevRequest devreq;
+    IOReturn ior = kIOReturnSuccess;
+    
+    ELG(reg, value, 'W1R-', "com_apple_driver_dts_USBCDCEthernet::Write1Register");
+    
+    devreq.bmRequestType = USBmakebmRequestType(kUSBOut, kUSBVendor, kUSBDevice);
+    devreq.bRequest = kVenReqWriteRegisterByte;
+    devreq.wValue = value;
+    devreq.wIndex = reg;
+    devreq.wLength = 0;
+    devreq.pData = NULL;
+    devreq.wLenDone = 0;
+    
+    ior = fpDevice->DeviceRequest(&devreq);
+    if (ior != kIOReturnSuccess)
     {
-      // Clear the stall and try it once more
-      fpDevice->GetPipeZero()->ClearPipeStall(false);
-      ior = fpDevice->DeviceRequest(&devreq);
-      if (ior != kIOReturnSuccess)
-      {
-        ELG(devreq.bRequest, ior, 'USE-', "com_apple_driver_dts_USBCDCEthernet::Write1Register - DeviceRequest, error a second time");
-        return ior;
-      }
+        ELG(devreq.bRequest, ior, 'USE-', "com_apple_driver_dts_USBCDCEthernet::Write1Register - DeviceRequest error");
+        if (ior == kIOUSBPipeStalled)
+        {
+            // Clear the stall and try it once more
+            fpDevice->GetPipeZero()->ClearPipeStall(false);
+            ior = fpDevice->DeviceRequest(&devreq);
+            if (ior != kIOReturnSuccess)
+            {
+                ELG(devreq.bRequest, ior, 'USE-', "com_apple_driver_dts_USBCDCEthernet::Write1Register - DeviceRequest, error a second time");
+                return ior;
+            }
+        }
     }
-  }
-  
-	return ior;
+    
+    return ior;
 }/* end Write1Register */
 
 /****************************************************************************************************/
@@ -2666,7 +2666,7 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::clearPipeStall(IOUSBPipe *thePipe)
     }
     
     return rtn;
-
+    
 }/* end clearPipeStall */
 
 /****************************************************************************************************/
@@ -2698,40 +2698,40 @@ void com_apple_driver_dts_USBCDCEthernet::receivePacket(UInt8 *packet, UInt32 si
             fpNetStats->inputErrors++;
         return;
     }
-  
+    
     //while (size >0)
     //{
-      if (*ptr != 0x40)
-      {
+    if (*ptr != 0x40)
+    {
         ELG(0, *ptr, 'rcP-', "com_apple_driver_dts_USBCDCEthernet::receivePacket - Packet size error, packet dropped");
         if (fInputErrsOK)
-          fpNetStats->inputErrors++;
+            fpNetStats->inputErrors++;
         return;
-      }
+    }
     
-      length = ptr[1] | (ptr[2] << 8);
-      ptr += 3;
-      size -= 3;
-      
-      ELG(0, length, 'rcP-', "com_apple_driver_dts_USBCDCEthernet::receivePacket - Packet length");
-      
-      m = allocatePacket(length);
-      if (m)
-      {
-          bcopy(ptr, mbuf_data(m), length);
-          submit = fNetworkInterface->inputPacket(m, length);
-          ELG(0, submit, 'rcSb', "com_apple_driver_dts_USBCDCEthernet::receivePacket - Packets submitted");
-          if (fInputPktsOK)
-              fpNetStats->inputPackets++;
-      } else {
-          ELG(0, 0, 'rcB-', "com_apple_driver_dts_USBCDCEthernet::receivePacket - Buffer allocation failed, packet dropped");
-          if (fInputErrsOK)
-              fpNetStats->inputErrors++;
-      }
+    length = ptr[1] | (ptr[2] << 8);
+    ptr += 3;
+    size -= 3;
+    
+    ELG(0, length, 'rcP-', "com_apple_driver_dts_USBCDCEthernet::receivePacket - Packet length");
+    
+    m = allocatePacket(length);
+    if (m)
+    {
+        bcopy(ptr, mbuf_data(m), length);
+        submit = fNetworkInterface->inputPacket(m, length);
+        ELG(0, submit, 'rcSb', "com_apple_driver_dts_USBCDCEthernet::receivePacket - Packets submitted");
+        if (fInputPktsOK)
+            fpNetStats->inputPackets++;
+    } else {
+        ELG(0, 0, 'rcB-', "com_apple_driver_dts_USBCDCEthernet::receivePacket - Buffer allocation failed, packet dropped");
+        if (fInputErrsOK)
+            fpNetStats->inputErrors++;
+    }
     //  size -= length;
     //  ptr += length;
     //}
-
+    
 }/* end receivePacket */
 
 /****************************************************************************************************/
@@ -2747,17 +2747,17 @@ void com_apple_driver_dts_USBCDCEthernet::receivePacket(UInt8 *packet, UInt32 si
 /****************************************************************************************************/
 void com_apple_driver_dts_USBCDCEthernet::timerFired(OSObject *owner, IOTimerEventSource *sender)
 {
-
-//    ELG(0, 0, 'tmFd', "com_apple_driver_dts_USBCDCEthernet::timerFired");
+    
+    //    ELG(0, 0, 'tmFd', "com_apple_driver_dts_USBCDCEthernet::timerFired");
     
     if (owner)
     {
-	com_apple_driver_dts_USBCDCEthernet* target = OSDynamicCast(com_apple_driver_dts_USBCDCEthernet, owner);
-	
-	if (target)
-	{
-	    target->timeoutOccurred(sender);
-	}
+        com_apple_driver_dts_USBCDCEthernet* target = OSDynamicCast(com_apple_driver_dts_USBCDCEthernet, owner);
+        
+        if (target)
+        {
+            target->timeoutOccurred(sender);
+        }
     }
     
 }/* end timerFired */
@@ -2781,9 +2781,9 @@ void com_apple_driver_dts_USBCDCEthernet::timeoutOccurred(IOTimerEventSource * /
     IOReturn		rc;
     IOUSBDevRequest	*STREQ;
     bool		statOk = false;
-
+    
     ELG(0, 0, 'tmOd', "com_apple_driver_dts_USBCDCEthernet::timeoutOccurred");
-
+    
     enetStats = (UInt32 *)&fEthernetStatistics;
     if (*enetStats == 0)
     {
@@ -2793,15 +2793,15 @@ void com_apple_driver_dts_USBCDCEthernet::timeoutOccurred(IOTimerEventSource * /
     
     if (fReady == false)
     {
-        ELG(0, 0, 'tmS-', "com_apple_driver_dts_USBCDCEthernet::timeoutOccurred - Spurious");    
+        ELG(0, 0, 'tmS-', "com_apple_driver_dts_USBCDCEthernet::timeoutOccurred - Spurious");
     } else {
-    
-            // Only do it if it's not already in progress
-    
+        
+        // Only do it if it's not already in progress
+        
         if (!fStatInProgress)
         {
-
-                // Check if the stat we're currently interested in is supported
+            
+            // Check if the stat we're currently interested in is supported
             
             currStat = stats[fCurrStat++];
             if (fCurrStat >= numStats)
@@ -2892,7 +2892,7 @@ void com_apple_driver_dts_USBCDCEthernet::timeoutOccurred(IOTimerEventSource * /
                     break;
             }
         }
-
+        
         if (statOk)
         {
             STREQ = (IOUSBDevRequest*)IOMalloc(sizeof(IOUSBDevRequest));
@@ -2901,18 +2901,18 @@ void com_apple_driver_dts_USBCDCEthernet::timeoutOccurred(IOTimerEventSource * /
                 ELG(0, 0, 'tma-', "com_apple_driver_dts_USBCDCEthernet::timeoutOccurred - allocate STREQ failed");
             } else {
                 bzero(STREQ, sizeof(IOUSBDevRequest));
-        
-                    // Now build the Statistics Request
-		
+                
+                // Now build the Statistics Request
+                
                 STREQ->bmRequestType = USBmakebmRequestType(kUSBOut, kUSBClass, kUSBInterface);
                 STREQ->bRequest = kGet_Ethernet_Statistics;
                 STREQ->wValue = currStat;
                 STREQ->wIndex = fCommInterfaceNumber;
                 STREQ->wLength = 4;
                 STREQ->pData = &fStatValue;
-	
+                
                 fStatsCompletionInfo.parameter = STREQ;
-	
+                
                 rc = fpDevice->DeviceRequest(STREQ, &fStatsCompletionInfo);
                 if (rc != kIOReturnSuccess)
                 {
@@ -2924,11 +2924,11 @@ void com_apple_driver_dts_USBCDCEthernet::timeoutOccurred(IOTimerEventSource * /
             }
         }
     }
-
-        // Restart the watchdog timer
-        
+    
+    // Restart the watchdog timer
+    
     fTimerSource->setTimeoutMS(WATCHDOG_TIMER_MS);
-
+    
 }/* end timeoutOccurred */
 
 /****************************************************************************************************/
@@ -2946,73 +2946,73 @@ void com_apple_driver_dts_USBCDCEthernet::timeoutOccurred(IOTimerEventSource * /
 IOReturn com_apple_driver_dts_USBCDCEthernet::message(UInt32 type, IOService *provider, void *argument)
 {
     IOReturn	ior;
-	
+    
     ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message");
-	
+    
     switch (type)
     {
         case kIOMessageServiceIsTerminated:
             ELG(fReady, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOMessageServiceIsTerminated");
-			
+            
             if (fReady)
             {
                 if (!fTerminate)		// Check if we're already being terminated
-                { 
-		    // NOTE! This call below depends on the hard coded path of this KEXT. Make sure
-		    // that if the KEXT moves, this path is changed!
-		    KUNCUserNotificationDisplayNotice(
-			0,		// Timeout in seconds
-			0,		// Flags (for later usage)
-			(char *)"",		// iconPath (not supported yet)
-			(char *)"",		// soundPath (not supported yet)
-			(char *)"/System/Library/Extensions/com_apple_driver_dts_USBCDCEthernet.kext",				// localizationPath
-			(char *)"Unplug Header",		// the header
-			(char *)"Unplug Notice",		// the notice - look in Localizable.strings
-			(char *)"OK");
+                {
+                    // NOTE! This call below depends on the hard coded path of this KEXT. Make sure
+                    // that if the KEXT moves, this path is changed!
+                    KUNCUserNotificationDisplayNotice(
+                                                      0,		// Timeout in seconds
+                                                      0,		// Flags (for later usage)
+                                                      (char *)"",		// iconPath (not supported yet)
+                                                      (char *)"",		// soundPath (not supported yet)
+                                                      (char *)"/System/Library/Extensions/com_apple_driver_dts_USBCDCEthernet.kext",				// localizationPath
+                                                      (char *)"Unplug Header",		// the header
+                                                      (char *)"Unplug Notice",		// the notice - look in Localizable.strings
+                                                      (char *)"OK");
                 }
             } else {
-                if (fCommInterface)	
+                if (fCommInterface)
                 {
-                    fCommInterface->close(this);	
+                    fCommInterface->close(this);
                     fCommInterface->release();
-                    fCommInterface = NULL;	
-                }
-	
-                if (fDataInterface)	
-                { 
-                    fDataInterface->close(this);	
-                    fDataInterface->release();
-                    fDataInterface = NULL;	
+                    fCommInterface = NULL;
                 }
                 
-            	fpDevice->close(this); 	// need to close so we can get the free and stop calls, only if no sessions active (see putToSleep)
+                if (fDataInterface)
+                {
+                    fDataInterface->close(this);
+                    fDataInterface->release();
+                    fDataInterface = NULL;
+                }
+                
+                fpDevice->close(this); 	// need to close so we can get the free and stop calls, only if no sessions active (see putToSleep)
                 fpDevice = NULL;
             }
-			
+            
             fTerminate = true;		// we're being terminated (unplugged)
-            return kIOReturnSuccess;			
-        case kIOMessageServiceIsSuspended: 	
+            return kIOReturnSuccess;
+        case kIOMessageServiceIsSuspended:
             ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOMessageServiceIsSuspended");
-            break;			
-        case kIOMessageServiceIsResumed: 	
+            break;
+        case kIOMessageServiceIsResumed:
             ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOMessageServiceIsResumed");
-            break;			
-        case kIOMessageServiceIsRequestingClose: 
-            ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOMessageServiceIsRequestingClose"); 
+            break;
+        case kIOMessageServiceIsRequestingClose:
+            ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOMessageServiceIsRequestingClose");
             break;
         case kIOMessageServiceIsAttemptingOpen:
             ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOMessageServiceIsAttemptingOpen");
-        break;
+            break;
         case kIOMessageServiceWasClosed:
-            ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOMessageServiceWasClosed"); 
+            ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOMessageServiceWasClosed");
             break;
-        case kIOMessageServiceBusyStateChange: 	
-            ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOMessageServiceBusyStateChange"); 
+        case kIOMessageServiceBusyStateChange:
+            ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOMessageServiceBusyStateChange");
             break;
-        case kIOUSBMessagePortHasBeenResumed: 	
+        case kIOUSBMessagePortHasBeenResumed:
             ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOUSBMessagePortHasBeenResumed");
             
-                // If the reads are dead try and resurrect them
+            // If the reads are dead try and resurrect them
             
             if (fCommDead)
             {
@@ -3035,7 +3035,7 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::message(UInt32 type, IOService *pr
                     fDataDead = false;
                 }
             }
-
+            
             break;
         case kIOUSBMessageHubResumePort:
             ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOUSBMessageHubResumePort");
@@ -3044,7 +3044,7 @@ IOReturn com_apple_driver_dts_USBCDCEthernet::message(UInt32 type, IOService *pr
             ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - kIOUSBMessagePortWasNotSuspended");
             break;
         default:
-            ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - unknown message"); 
+            ELG(0, type, 'mess', "com_apple_driver_dts_USBCDCEthernet::message - unknown message");
             break;
     }
     
