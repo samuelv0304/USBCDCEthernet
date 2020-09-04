@@ -10,6 +10,7 @@
 		3EC7EED808D730E2004D38EB /* USBCDCEthernet.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A224C3EFF42367911CA2CB7 /* USBCDCEthernet.h */; };
 		3EC7EEDA08D730E2004D38EB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
 		3EC7EEDC08D730E2004D38EB /* USBCDCEthernet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A224C3FFF42367911CA2CB7 /* USBCDCEthernet.cpp */; settings = {ATTRIBUTES = (); }; };
+		693FFAB22502175300AB2F3B /* IOUSBFamily in Resources */ = {isa = PBXBuildFile; fileRef = 693FFAB12502175300AB2F3B /* IOUSBFamily */; };
 		7E88FD9317D209850093B2EF /* DM9601.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E88FD9217D209850093B2EF /* DM9601.h */; };
 /* End PBXBuildFile section */
 
@@ -19,6 +20,7 @@
 		1A224C3FFF42367911CA2CB7 /* USBCDCEthernet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = USBCDCEthernet.cpp; sourceTree = "<group>"; };
 		3EC7EEE308D730E2004D38EB /* USBCDCEthernet.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = USBCDCEthernet.plist; sourceTree = "<group>"; };
 		3EC7EEE408D730E2004D38EB /* USBCDCEthernet.kext */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = USBCDCEthernet.kext; sourceTree = BUILT_PRODUCTS_DIR; };
+		693FFAB12502175300AB2F3B /* IOUSBFamily */ = {isa = PBXFileReference; lastKnownFileType = folder; path = IOUSBFamily; sourceTree = "<group>"; };
 		7E88FD9217D209850093B2EF /* DM9601.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DM9601.h; sourceTree = "<group>"; };
 		F59C308D02C2AF4001000102 /* Kernel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kernel.framework; path = /System/Library/Frameworks/Kernel.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
@@ -65,6 +67,7 @@
 		247142CAFF3F8F9811CA285C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				693FFAB12502175300AB2F3B /* IOUSBFamily */,
 				7E88FD9217D209850093B2EF /* DM9601.h */,
 				1A224C3EFF42367911CA2CB7 /* USBCDCEthernet.h */,
 				1A224C3FFF42367911CA2CB7 /* USBCDCEthernet.cpp */,
@@ -116,6 +119,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0460;
+				TargetAttributes = {
+					3EC7EED508D730E2004D38EB = {
+						DevelopmentTeam = U2PJV837D8;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = 3EEA305108D71E49002CBB49 /* Build configuration list for PBXProject "USBCDCEthernet" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -140,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3EC7EEDA08D730E2004D38EB /* InfoPlist.strings in Resources */,
+				693FFAB22502175300AB2F3B /* IOUSBFamily in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,10 +212,12 @@
 		3EC7EEE108D730E2004D38EB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CODE_SIGN_IDENTITY = "";
+				ARCHS = "$(ARCHS_STANDARD)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = U2PJV837D8;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -219,6 +231,7 @@
 				MODULE_VERSION = 1.0.1d2;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = USBCDCEthernet;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = "";
 				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = kext;
@@ -229,9 +242,11 @@
 		3EC7EEE208D730E2004D38EB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				CODE_SIGN_IDENTITY = "";
+				ARCHS = "$(ARCHS_STANDARD)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = U2PJV837D8;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_TREAT_NONCONFORMANT_CODE_ERRORS_AS_WARNINGS = YES;
@@ -244,6 +259,7 @@
 				MODULE_VERSION = 1.0.1d2;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = USBCDCEthernet;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = "";
 				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = kext;
@@ -253,7 +269,7 @@
 		3EEA305208D71E49002CBB49 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -265,7 +281,7 @@
 		3EEA305308D71E49002CBB49 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;

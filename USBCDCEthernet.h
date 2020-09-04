@@ -101,12 +101,12 @@
 
 #include <IOKit/pwr_mgt/RootDomain.h>
 
-#include <IOKit/usb/IOUSBBus.h>
-#include <IOKit/usb/IOUSBNub.h>
-#include <IOKit/usb/IOUSBDevice.h>
-#include <IOKit/usb/IOUSBPipe.h>
+#include "IOUSBFamily/Headers/IOUSBBus.h"
+#include "IOUSBFamily/Headers/IOUSBNub.h"
+#include "IOUSBFamily/Headers/IOUSBDevice.h"
+#include "IOUSBFamily/Headers/IOUSBPipe.h"
 #include <IOKit/usb/USB.h>
-#include <IOKit/usb/IOUSBInterface.h>
+#include "IOUSBFamily/Headers/IOUSBInterface.h"
 
 #include <UserNotification/KUNCUserNotifications.h>
 

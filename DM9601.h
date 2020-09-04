@@ -1,5 +1,6 @@
 /*
- *	Davicom DM9601 USB 1.1 Ethernet Driver.
+ *	Davicom DM9601 USB 2.0 Ethernet Driver.
+ *  Copyright (c) 2020 Jay Lux Ferro <jayluxferro@sperixlabs.org>
  *	Copyright (c) 2013 Samuel Vinson <samuelv0304@gmail.com>
  *	Copyright (c) 2008, 2011 Siarzhuk Zharski <imker@gmx.li>
  *	Copyright (c) 2009 Adrien Destugues <pulkomandy@gmail.com>
