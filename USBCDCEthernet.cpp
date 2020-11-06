@@ -95,7 +95,9 @@ mediumTable[] =
     {kIOMediumEthernet10BaseT 	 | kIOMediumOptionHalfDuplex,								10},
     {kIOMediumEthernet10BaseT 	 | kIOMediumOptionFullDuplex,								10},
     {kIOMediumEthernet100BaseTX  | kIOMediumOptionHalfDuplex,								100},
-    {kIOMediumEthernet100BaseTX  | kIOMediumOptionFullDuplex,								100}
+    {kIOMediumEthernet100BaseTX  | kIOMediumOptionFullDuplex,								100},
+    {kIOMediumEthernet1000BaseT  | kIOMediumOptionHalfDuplex,                              1000},
+    {kIOMediumEthernet1000BaseT  | kIOMediumOptionFullDuplex,                              1000},
 };
 
 #define	numStats	13
@@ -1339,7 +1341,7 @@ bool com_apple_driver_dts_USBCDCEthernet::createNetworkInterface()
 IOReturn com_apple_driver_dts_USBCDCEthernet::enable(IONetworkInterface *netif)
 {
     IONetworkMedium	*medium;
-    IOMediumType    	mediumType = kIOMediumEthernet100BaseTX | kIOMediumOptionFullDuplex;
+    IOMediumType    	mediumType = kIOMediumEthernet1000BaseT | kIOMediumOptionFullDuplex;
     
     ELG(0, netif, 'enbl', "com_apple_driver_dts_USBCDCEthernet::enable");
     
@@ -2231,7 +2233,7 @@ bool com_apple_driver_dts_USBCDCEthernet::USBTransmitPacket(mbuf_t packet)
     UInt32		total_pkt_length = 0;
     UInt32		rTotal = 0;
     IOReturn		ior = kIOReturnSuccess;
-    UInt32		poolIndx;
+    UInt32		poolIndx = 0;
     bool		gotBuffer = false;
     UInt16		tryCount = 0;
     
@@ -2777,7 +2779,7 @@ void com_apple_driver_dts_USBCDCEthernet::timerFired(OSObject *owner, IOTimerEve
 void com_apple_driver_dts_USBCDCEthernet::timeoutOccurred(IOTimerEventSource * /*timer*/)
 {
     UInt32		*enetStats;
-    UInt16		currStat;
+    UInt16		currStat = 0;
     IOReturn		rc;
     IOUSBDevRequest	*STREQ;
     bool		statOk = false;
