@@ -12,7 +12,22 @@ How do I install it?
 --------------------
 
 - Download the source here from Github and compile it with XCode
-- Copy USBCDCEthernet.kext in /System/Library/Extensions with 'sudo' command.
+- Determine the path of the built kext and copy it to the `/Library/Extension` directory.
+```bash
+sudo cp -rf /Users/jay/Library/Developer/Xcode/DerivedData/USBCDCEthernet-ffdtszgghxiysdbvyujrkwghdzwd/Build/Products/Debug/USBCDCEthernet.kext /Library/Extensions/
+```
+
+- Change the user permissions on the extension.
+```bash
+sudo chown -R root:wheel /Library/Extensions/USBCDCEthernet.kext
+sudo chmod -R 755 /Library/Extensions/USBCDCEthernet.kext
+```
+
+- Load the extension
+```bash
+sudo kextload /Library/Extensions/USBCDCEthernet.kext
+```
+
 
 Thanks and Acknowledgements
 ---------------------------
